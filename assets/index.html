@@ -1,11 +1,366 @@
 <!DOCTYPE html>
-<html>
-<body style="background:#050810;color:white;padding:20px;text-align:center;font-family:sans-serif">
-  <h1>اختبار JavaScript</h1>
-  <button onclick="document.getElementById('res').innerText='✅ يعمل بنجاح!'" 
-          style="padding:20px;font-size:20px;background:#06b6d4;color:white;border:none;border-radius:10px;margin-top:20px;cursor:pointer">
-    اضغط هنا
-  </button>
-  <h2 id="res" style="color:#2eff9a;margin-top:30px;">لم يتم الضغط بعد</h2>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مختبر البوابات المنطقية والترانزستور</title>
+<style>
+  /* ============================================================
+     نظام الألوان (Dark Mode / Tech / PCB Style)
+     ============================================================ */
+  :root {
+    --bg: #050810;
+    --panel: #0e1424;
+    --panel-2: #141b2e;
+    --border: #1e2a44;
+    --text: #e2e8f0;
+    --text-dim: #7a8ba0;
+    --cyan: #06b6d4;
+    --green: #10b981;
+    --green-bright: #2eff9a;
+    --red: #ef4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 60px;
+    background-image:
+      linear-gradient(rgba(6,182,212,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(6,182,212,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* الترويسة */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(5,8,16,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+    text-align: center;
+  }
+  .header h1 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #06b6d4, #2eff9a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header p { font-size: 0.72rem; color: var(--text-dim); margin-top: 4px; }
+
+  /* الأقسام */
+  .section { max-width: 1300px; margin: 24px auto; padding: 0 16px; }
+  .section-title {
+    font-size: 1.05rem; font-weight: 700; color: var(--cyan);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::before {
+    content: ''; width: 4px; height: 20px; background: var(--cyan);
+    border-radius: 2px; box-shadow: 0 0 10px var(--cyan);
+  }
+
+  /* شبكة البوابات */
+  .gates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .gate-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+    padding: 16px; position: relative; overflow: hidden; transition: all 0.25s;
+  }
+  .gate-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent); opacity: 0.6;
+  }
+  .gate-name { font-size: 1rem; font-weight: 700; color: var(--cyan); text-align: center; margin-bottom: 8px; font-family: monospace; letter-spacing: 1px; }
+  .gate-svg-wrap { display: flex; justify-content: center; padding: 8px; background: var(--panel-2); border-radius: 10px; margin-bottom: 12px; }
+  .gate-svg-wrap svg { width: 100%; max-width: 170px; height: auto; }
+
+  /* الأزرار */
+  .inputs { display: flex; gap: 8px; justify-content: center; margin-bottom: 12px; }
+  .input-btn {
+    flex: 1; padding: 8px 10px; background: var(--panel-2); border: 2px solid var(--border);
+    border-radius: 8px; color: var(--text-dim); font-size: 0.82rem; font-weight: 700;
+    font-family: monospace; cursor: pointer; transition: all 0.15s;
+  }
+  .input-btn.active { background: rgba(6,182,212,0.15); border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 12px rgba(6,182,212,0.4); }
+
+  /* مؤشر LED */
+  .led-row { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 10px; background: var(--panel-2); border-radius: 10px; margin-bottom: 12px; }
+  .led { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; transition: all 0.2s; }
+  .led.on { background: var(--green-bright); border: 2px solid var(--green); box-shadow: 0 0 12px var(--green-bright), 0 0 24px var(--green); }
+  .led.off { background: #3a1818; border: 2px solid #5a2424; box-shadow: inset 0 0 6px rgba(239,68,68,0.35); }
+  .led-label { font-family: monospace; font-size: 0.85rem; font-weight: 700; }
+  .led-label.on { color: var(--green-bright); text-shadow: 0 0 10px var(--green); }
+  .led-label.off { color: var(--text-dim); }
+
+  /* جدول الحقيقة */
+  .truth-table { width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.78rem; margin-bottom: 12px; }
+  .truth-table th, .truth-table td { padding: 5px; text-align: center; border: 1px solid var(--border); }
+  .truth-table th { background: var(--panel-2); color: var(--text-dim); font-weight: 700; }
+  .truth-table tr.active td { background: rgba(6,182,212,0.18); color: var(--cyan); font-weight: 700; }
+  .truth-table tr.active td.out-1 { background: rgba(46,255,154,0.22); color: var(--green-bright); }
+  .truth-table tr.active td.out-0 { background: rgba(239,68,68,0.15); color: var(--red); }
+
+  /* نص الفائدة */
+  .usage { font-size: 0.76rem; line-height: 1.7; color: var(--text-dim); background: rgba(6,182,212,0.05); border-right: 3px solid var(--cyan); padding: 8px 10px; border-radius: 4px; }
+  .usage strong { color: var(--cyan); }
+
+  /* الترانزستور */
+  .transistor-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
+  @media (max-width: 700px) { .transistor-card { grid-template-columns: 1fr; } }
+  .transistor-svg-wrap { display: flex; justify-content: center; background: var(--panel-2); border-radius: 12px; padding: 20px; }
+  .transistor-svg-wrap svg { width: 100%; max-width: 240px; height: auto; }
+  .transistor-controls { display: flex; flex-direction: column; gap: 14px; }
+  .control-group label { display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; margin-bottom: 8px; }
+  .control-group label span:last-child { color: var(--cyan); font-family: monospace; }
+  input[type=range] { width: 100%; height: 6px; -webkit-appearance: none; background: var(--border); border-radius: 3px; outline: none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--cyan); border: 2px solid var(--bg); cursor: pointer; box-shadow: 0 0 10px rgba(6,182,212,0.6); }
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat-box { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; text-align: center; }
+  .stat-box .s-label { font-size: 0.68rem; color: var(--text-dim); }
+  .stat-box .s-value { font-size: 1.05rem; font-weight: 700; font-family: monospace; margin-top: 2px; }
+  .stat-box .s-value.on { color: var(--green-bright); text-shadow: 0 0 8px var(--green); }
+  .stat-box .s-value.off { color: var(--red); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚡ مختبر البوابات المنطقية والترانزستور</h1>
+  <p>محاكي تفاعلي تعليمي — يعمل بدون إنترنت</p>
+</div>
+
+<div class="section">
+  <div class="section-title">البوابات المنطقية الأساسية</div>
+  <div class="gates-grid" id="gatesGrid"></div>
+</div>
+
+<div class="section">
+  <div class="section-title">الترانزستور كمفتاح إلكتروني (NPN BJT)</div>
+  <div class="transistor-card">
+    <div class="transistor-svg-wrap">
+      <svg id="transistorSvg" viewBox="0 0 220 220"></svg>
+    </div>
+    <div class="transistor-controls">
+      <div class="control-group">
+        <label>
+          <span>تيار القاعدة I_B</span>
+          <span id="ibLabel">0 μA</span>
+        </label>
+        <input type="range" id="ibSlider" min="0" max="200" value="0" step="5">
+      </div>
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="s-label">تيار المجمع I_C</div>
+          <div class="s-value off" id="icValue">0.00 mA</div>
+        </div>
+        <div class="stat-box">
+          <div class="s-label">حالة الحمل (LED)</div>
+          <div class="s-value off" id="stateValue">OFF</div>
+        </div>
+      </div>
+      <div class="led-row">
+        <div class="led off" id="transistorLed"></div>
+        <span class="led-label off" id="transistorLedLabel">الحمل مطفأ</span>
+      </div>
+      <div class="usage">
+        <strong>كيف يعمل؟</strong>
+        عندما يتدفق تيار صغير في القاعدة (Base)، يفتح الترانزستور ويسمح بمرور تيار أكبر بين المجمع والمبث، بنسبة تضخيم β ≈ 100. هكذا يتحكم تيار ضعيف في حمل كبير.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GATES = [
+  { id: 'AND', title: 'AND', inputs: 2, fn: (a, b) => (a && b) ? 1 : 0, usage: 'الخرج = 1 فقط عند تحقق <strong>جميع</strong> الشروط.' },
+  { id: 'OR', title: 'OR', inputs: 2, fn: (a, b) => (a || b) ? 1 : 0, usage: 'الخرج = 1 إذا تحقق <strong>أي</strong> شرط.' },
+  { id: 'NOT', title: 'NOT', inputs: 1, fn: (a) => a ? 0 : 1, usage: 'تعكس الإشارة (1 تصبح 0 والعكس).' },
+  { id: 'NAND', title: 'NAND', inputs: 2, fn: (a, b) => (a && b) ? 0 : 1, usage: 'بوابة <strong>شاملة</strong> تُبنى منها المعالجات.' },
+  { id: 'NOR', title: 'NOR', inputs: 2, fn: (a, b) => (a || b) ? 0 : 1, usage: 'شاملة، تُستخدم في الذاكرة والتوقيت.' },
+  { id: 'XOR', title: 'XOR', inputs: 2, fn: (a, b) => a !== b ? 1 : 0, usage: 'الخرج = 1 عند <strong>اختلاف</strong> المدخلين.' },
+  { id: 'XNOR', title: 'XNOR', inputs: 2, fn: (a, b) => a === b ? 1 : 0, usage: 'الخرج = 1 عند <strong>تساوي</strong> المدخلين.' }
+];
+
+const gateState = {};
+GATES.forEach(g => { gateState[g.id] = new Array(g.inputs).fill(0); });
+
+function gateSVG(id, isOne) {
+  const dim = '#4a5568';
+  const inputLines = isOne
+    ? `<line id="inp-${id}-0" x1="2" y1="40" x2="22" y2="40" stroke="${dim}"/>`
+    : `<line id="inp-${id}-0" x1="2" y1="25" x2="20" y2="25" stroke="${dim}"/>
+       <line id="inp-${id}-1" x1="2" y1="55" x2="20" y2="55" stroke="${dim}"/>`;
+
+  const bodies = {
+    AND:   `<path d="M20,12 L45,12 Q78,12 78,40 Q78,68 45,68 L20,68 Z"/>`,
+    OR:    `<path d="M20,12 Q42,12 65,40 Q42,68 20,68 Q38,40 20,12 Z"/>`,
+    NOT:   `<path d="M22,12 L65,40 L22,68 Z"/><circle cx="72" cy="40" r="6"/>`,
+    NAND:  `<path d="M20,12 L45,12 Q78,12 78,40 Q78,68 45,68 L20,68 Z"/><circle cx="86" cy="40" r="6"/>`,
+    NOR:   `<path d="M20,12 Q42,12 65,40 Q42,68 20,68 Q38,40 20,12 Z"/><circle cx="72" cy="40" r="6"/>`,
+    XOR:   `<path d="M20,12 Q42,12 65,40 Q42,68 20,68 Q38,40 20,12 Z"/><path d="M14,12 Q30,40 14,68"/>`,
+    XNOR:  `<path d="M20,12 Q42,12 65,40 Q42,68 20,68 Q38,40 20,12 Z"/><circle cx="72" cy="40" r="6"/><path d="M14,12 Q30,40 14,68"/>`
+  };
+  const outX = { AND:78, OR:65, NOT:78, NAND:92, NOR:78, XOR:65, XNOR:78 }[id];
+
+  return `<svg viewBox="0 0 110 80">
+    <g stroke-width="2.2" stroke-linecap="round" fill="none">${inputLines}</g>
+    <g fill="none" stroke="#06b6d4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${bodies[id]}</g>
+    <line id="out-${id}" x1="${outX}" y1="40" x2="108" y2="40" stroke="${dim}" stroke-width="2.2" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function buildCard(gate) {
+  const card = document.createElement('div');
+  card.className = 'gate-card';
+  card.innerHTML = `
+    <div class="gate-name">${gate.title}</div>
+    <div class="gate-svg-wrap">${gateSVG(gate.id, gate.inputs === 1)}</div>
+    <div class="inputs" id="inputs-${gate.id}"></div>
+    <div class="led-row">
+      <div class="led off" id="led-${gate.id}"></div>
+      <span class="led-label off" id="ledlabel-${gate.id}">Y = 0</span>
+    </div>
+    <table class="truth-table" id="table-${gate.id}"></table>
+    <div class="usage"><strong>الفائدة:</strong> ${gate.usage}</div>
+  `;
+
+  const inputsDiv = card.querySelector(`#inputs-${gate.id}`);
+  for (let i = 0; i < gate.inputs; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'input-btn';
+    btn.id = `input-${gate.id}-${i}`;
+    btn.onclick = () => toggleInput(gate.id, i);
+    inputsDiv.appendChild(btn);
+  }
+
+  buildTruthTable(gate.id, card.querySelector(`#table-${gate.id}`));
+  return card;
+}
+
+function buildTruthTable(id, tableElement) {
+  const gate = GATES.find(g => g.id === id);
+  let head = '<thead><tr>';
+  for (let i = 0; i < gate.inputs; i++) head += `<th>${String.fromCharCode(65 + i)}</th>`;
+  head += '<th>Y</th></tr></thead>';
+
+  const combos = gate.inputs === 1 ? [[0], [1]] : [[0,0],[0,1],[1,0],[1,1]];
+  let body = '<tbody>';
+  combos.forEach(combo => {
+    const y = gate.fn(...combo);
+    body += `<tr data-inputs="${combo.join(',')}">`;
+    combo.forEach(v => body += `<td>${v}</td>`);
+    body += `<td class="${y ? 'out-1' : 'out-0'}">${y}</td></tr>`;
+  });
+  body += '</tbody>';
+  tableElement.innerHTML = head + body;
+}
+
+function toggleInput(gateId, index) {
+  gateState[gateId][index] = gateState[gateId][index] ? 0 : 1;
+  updateGate(gateId);
+}
+
+function updateGate(id) {
+  const gate = GATES.find(g => g.id === id);
+  const state = gateState[id];
+  const out = gate.fn(...state);
+
+  state.forEach((val, i) => {
+    const btn = document.getElementById(`input-${id}-${i}`);
+    btn.textContent = `${String.fromCharCode(65 + i)} = ${val}`;
+    btn.classList.toggle('active', val === 1);
+    document.getElementById(`inp-${id}-${i}`).setAttribute('stroke', val ? '#2eff9a' : '#4a5568');
+  });
+
+  const led = document.getElementById('led-' + id);
+  const lbl = document.getElementById('ledlabel-' + id);
+  led.className = 'led ' + (out ? 'on' : 'off');
+  lbl.className = 'led-label ' + (out ? 'on' : 'off');
+  lbl.textContent = `Y = ${out} (${out ? 'ON' : 'OFF'})`;
+
+  document.getElementById(`out-${id}`).setAttribute('stroke', out ? '#2eff9a' : '#ef4444');
+
+  document.getElementById('table-' + id).querySelectorAll('tbody tr').forEach(tr => {
+    const inputs = tr.dataset.inputs.split(',').map(Number);
+    tr.classList.toggle('active', inputs.every((v, i) => v === state[i]));
+  });
+}
+
+const BETA = 100, VCC = 5, RC = 220, VCE_SAT = 0.2;
+
+function drawTransistor() {
+  document.getElementById('transistorSvg').innerHTML = `
+    <circle cx="110" cy="110" r="78" fill="none" stroke="#06b6d4" stroke-width="2" opacity="0.35"/>
+    <line x1="85" y1="65" x2="85" y2="155" stroke="#06b6d4" stroke-width="4" stroke-linecap="round"/>
+    <line x1="110" y1="110" x2="85" y2="110" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="30" y1="110" x2="85" y2="110" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="85" y1="90" x2="130" y2="65" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="130" y1="65" x2="130" y2="30" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="85" y1="130" x2="130" y2="155" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="130" y1="155" x2="130" y2="190" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round"/>
+    <polygon points="115,147 103,145 107,138" fill="#06b6d4"/>
+    <text x="18" y="105" font-family="monospace" font-size="13" font-weight="bold" fill="#06b6d4">B</text>
+    <text x="140" y="30" font-family="monospace" font-size="13" font-weight="bold" fill="#06b6d4">C</text>
+    <text x="140" y="200" font-family="monospace" font-size="13" font-weight="bold" fill="#06b6d4">E</text>
+    <text x="35" y="100" font-size="9" fill="#7a8ba0">Base</text>
+    <text x="140" y="65" font-size="9" fill="#7a8ba0">Collector</text>
+    <text x="140" y="170" font-size="9" fill="#7a8ba0">Emitter</text>
+  `;
+}
+
+function updateTransistor() {
+  const ib = parseFloat(document.getElementById('ibSlider').value);
+  document.getElementById('ibLabel').textContent = ib.toFixed(0) + ' μA';
+
+  let ic = ib * 1e-6 * BETA * 1000;
+  let vce = VCC - (ic / 1000) * RC;
+
+  if (vce < VCE_SAT) {
+    vce = VCE_SAT;
+    ic = ((VCC - VCE_SAT) / RC) * 1000;
+  }
+
+  const on = ic > 1;
+  const icEl = document.getElementById('icValue');
+  icEl.textContent = ic.toFixed(2) + ' mA';
+  icEl.className = 's-value ' + (on ? 'on' : 'off');
+
+  const stEl = document.getElementById('stateValue');
+  stEl.textContent = on ? 'ON' : 'OFF';
+  stEl.className = 's-value ' + (on ? 'on' : 'off');
+
+  const led = document.getElementById('transistorLed');
+  led.className = 'led ' + (on ? 'on' : 'off');
+
+  const lbl = document.getElementById('transistorLedLabel');
+  lbl.className = 'led-label ' + (on ? 'on' : 'off');
+  lbl.textContent = on ? 'الحمل يعمل' : 'الحمل مطفأ';
+
+  if (on) {
+    const intensity = Math.min(1, ic / 22);
+    led.style.boxShadow = `0 0 ${8 + intensity * 12}px var(--green-bright), 0 0 ${16 + intensity * 24}px var(--green), 0 0 ${30 + intensity * 40}px rgba(46,255,154,${0.3 + intensity * 0.4})`;
+  } else {
+    led.style.boxShadow = '';
+  }
+}
+
+function init() {
+  const grid = document.getElementById('gatesGrid');
+  GATES.forEach(g => grid.appendChild(buildCard(g)));
+  GATES.forEach(g => updateGate(g.id));
+  drawTransistor();
+  document.getElementById('ibSlider').addEventListener('input', updateTransistor);
+  updateTransistor();
+}
+
+init();
+</script>
 </body>
 </html>
