@@ -1,323 +1,400 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="dark">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>محاكي الترانزستور وبواباته المنطقية | TransistorLab</title>
-
-  <!-- Tailwind CSS محلي (بدون إنترنت) -->
-  <script>
-    /* ===== Tailwind Micro-Build (Dark Mode, RTL) ===== */
-    (function () {
-      const style = document.createElement('style');
-      style.textContent = `
-        *,*::before,*::after{box-sizing:border-box;border-width:0;border-style:solid;border-color:#1e293b}
-        html{line-height:1.5;-webkit-text-size-adjust:100%;font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans Arabic',sans-serif}
-        body{margin:0;line-height:inherit}
-        button{font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0;background:transparent;border:0;cursor:pointer}
-        input{font-family:inherit;font-size:100%;line-height:inherit;color:inherit;margin:0;padding:0}
-        h1,h2,h3,p{margin:0}
-        svg{display:block;vertical-align:middle}
-        .bg-slate-950{background-color:#020617}
-        .bg-slate-900{background-color:#0f172a}
-        .bg-slate-900\/90{background-color:rgba(15,23,42,.9)}
-        .bg-slate-800{background-color:#1e293b}
-        .bg-slate-800\/80{background-color:rgba(30,41,59,.8)}
-        .bg-slate-800\/60{background-color:rgba(30,41,59,.6)}
-        .bg-slate-700{background-color:#334155}
-        .bg-cyan-500{background-color:#06b6d4}
-        .bg-emerald-500\/10{background-color:rgba(16,185,129,.1)}
-        .bg-rose-500\/10{background-color:rgba(244,63,94,.1)}
-        .bg-cyan-500\/5{background-color:rgba(6,182,212,.05)}
-        .bg-slate-800\/60{background-color:rgba(30,41,59,.6)}
-        .text-white{color:#fff}
-        .text-slate-100{color:#f1f5f9}
-        .text-slate-200{color:#e2e8f0}
-        .text-slate-300{color:#cbd5e1}
-        .text-slate-400{color:#94a3b8}
-        .text-cyan-400{color:#22d3ee}
-        .text-cyan-500{color:#06b6d4}
-        .text-emerald-400{color:#34d399}
-        .text-rose-400{color:#fb7185}
-        .text-amber-500{color:#f59e0b}
-        .border{border-width:1px}
-        .border-b{border-bottom-width:1px}
-        .border-t{border-top-width:1px}
-        .border-slate-800{border-color:#1e293b}
-        .border-slate-700{border-color:#334155}
-        .border-rose-500\/30{border-color:rgba(244,63,94,.3)}
-        .border-cyan-500\/20{border-color:rgba(6,182,212,.2)}
-        .border-emerald-500\/40{border-color:rgba(16,185,129,.4)}
-        .rounded{border-radius:.25rem}
-        .rounded-md{border-radius:.375rem}
-        .rounded-lg{border-radius:.5rem}
-        .rounded-xl{border-radius:.75rem}
-        .rounded-full{border-radius:9999px}
-        .flex{display:flex}
-        .inline-flex{display:inline-flex}
-        .grid{display:grid}
-        .hidden{display:none}
-        .flex-col{flex-direction:column}
-        .flex-wrap{flex-wrap:wrap}
-        .items-center{align-items:center}
-        .items-start{align-items:flex-start}
-        .justify-between{justify-content:space-between}
-        .justify-center{justify-content:center}
-        .justify-around{justify-content:space-around}
-        .gap-1{gap:.25rem}
-        .gap-1\.5{gap:.375rem}
-        .gap-2{gap:.5rem}
-        .gap-3{gap:.75rem}
-        .gap-4{gap:1rem}
-        .gap-5{gap:1.25rem}
-        .gap-6{gap:1.5rem}
-        .p-1{padding:.25rem}
-        .p-1\.5{padding:.375rem}
-        .p-2{padding:.5rem}
-        .p-2\.5{padding:.625rem}
-        .p-3{padding:.75rem}
-        .p-4{padding:1rem}
-        .p-5{padding:1.25rem}
-        .px-2{padding-left:.5rem;padding-right:.5rem}
-        .px-2\.5{padding-left:.625rem;padding-right:.625rem}
-        .px-3{padding-left:.75rem;padding-right:.75rem}
-        .px-3\.5{padding-left:.875rem;padding-right:.875rem}
-        .px-4{padding-left:1rem;padding-right:1rem}
-        .py-0\.5{padding-top:.125rem;padding-bottom:.125rem}
-        .py-1{padding-top:.25rem;padding-bottom:.25rem}
-        .py-1\.5{padding-top:.375rem;padding-bottom:.375rem}
-        .py-2{padding-top:.5rem;padding-bottom:.5rem}
-        .py-3{padding-top:.75rem;padding-bottom:.75rem}
-        .py-6{padding-top:1.5rem;padding-bottom:1.5rem}
-        .pt-1{padding-top:.25rem}
-        .pt-2{padding-top:.5rem}
-        .pt-3{padding-top:.75rem}
-        .pb-3{padding-bottom:.75rem}
-        .mt-1{margin-top:.25rem}
-        .mt-4{margin-top:1rem}
-        .w-2\.5{width:.625rem}
-        .w-9{width:2.25rem}
-        .w-full{width:100%}
-        .h-2{height:.5rem}
-        .h-2\.5{height:.625rem}
-        .h-9{height:2.25rem}
-        .h-16{height:4rem}
-        .h-auto{height:auto}
-        .min-h-\[380px\]{min-height:380px}
-        .min-h-screen{min-height:100vh}
-        .max-w-7xl{max-width:80rem}
-        .max-w-\[500px\]{max-width:500px}
-        .mx-auto{margin-left:auto;margin-right:auto}
-        .shrink-0{flex-shrink:0}
-        .flex-1{flex:1 1 0%}
-        .overflow-x-auto{overflow-x:auto}
-        .overflow-hidden{overflow:hidden}
-        .relative{position:relative}
-        .sticky{position:sticky}
-        .top-0{top:0}
-        .z-50{z-index:50}
-        .backdrop-blur-md{backdrop-filter:blur(12px)}
-        .text-xs{font-size:.75rem;line-height:1rem}
-        .text-sm{font-size:.875rem;line-height:1.25rem}
-        .text-base{font-size:1rem;line-height:1.5rem}
-        .text-lg{font-size:1.125rem;line-height:1.75rem}
-        .text-xl{font-size:1.25rem;line-height:1.75rem}
-        .text-\[10px\]{font-size:10px}
-        .text-\[11px\]{font-size:11px}
-        .font-bold{font-weight:700}
-        .font-semibold{font-weight:600}
-        .font-mono{font-family:'JetBrains Mono','Courier New',monospace}
-        .font-sans{font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans Arabic',sans-serif}
-        .text-center{text-align:center}
-        .tabular-nums{font-variant-numeric:tabular-nums}
-        .tracking-tight{letter-spacing:-.025em}
-        .leading-relaxed{line-height:1.625}
-        .select-none{user-select:none}
-        .cursor-pointer{cursor:pointer}
-        .transition-all{transition-property:all;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}
-        .transition-colors{transition-property:background-color,border-color,color,fill,stroke;transition-duration:.15s}
-        .duration-200{transition-duration:.2s}
-        .shadow-xs{box-shadow:0 1px 2px 0 rgba(0,0,0,.05)}
-        .shadow-sm{box-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1)}
-        .animate-pulse{animation:pulse 2s cubic-bezier(.4,0,.6,1) infinite}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-        .accent-cyan-500{accent-color:#06b6d4}
-        .accent-emerald-500{accent-color:#10b981}
-        .accent-amber-500{accent-color:#f59e0b}
-        .bg-gradient-to-tr{background-image:linear-gradient(to top right,var(--tw-gradient-from),var(--tw-gradient-to))}
-        .from-cyan-600{--tw-gradient-from:#0891b2;--tw-gradient-to:rgba(8,145,178,0)}
-        .to-emerald-500{--tw-gradient-to:#10b981}
-        .text-\[11px\]{font-size:11px}
-        @media (min-width:640px){
-          .sm\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
-          .sm\:flex-row{flex-direction:row}
-          .sm\:items-center{align-items:center}
-          .sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}
-        }
-        @media (min-width:768px){
-          .md\:flex{display:flex}
-          .md\:hidden{display:none}
-          .md\:flex-row{flex-direction:row}
-          .md\:items-center{align-items:center}
-          .md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-        }
-        @media (min-width:1024px){
-          .lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-          .lg\:grid-cols-12{grid-template-columns:repeat(12,minmax(0,1fr))}
-          .lg\:col-span-8{grid-column:span 8/span 8}
-          .lg\:col-span-4{grid-column:span 4/span 4}
-          .lg\:px-8{padding-left:2rem;padding-right:2rem}
-        }
-        .grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}
-        .grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-        input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer}
-        input[type=range]::-webkit-slider-runnable-track{height:.5rem;background:#334155;border-radius:.5rem}
-        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;height:1.1rem;width:1.1rem;border-radius:9999px;background:#06b6d4;margin-top:-.3rem;border:2px solid #0f172a}
-        @keyframes wireFlow{from{stroke-dashoffset:24}to{stroke-dashoffset:0}}
-        .animate-wire-flow{stroke-dasharray:6 6;animation:wireFlow 1s linear infinite}
-      `;
-      document.head.appendChild(style);
-    })();
-  </script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TransistorLab</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+  body{background:#020617;color:#f1f5f9;min-height:100vh;padding-bottom:20px}
+  header{position:sticky;top:0;z-index:50;background:rgba(15,23,42,.95);backdrop-filter:blur(10px);border-bottom:1px solid #1e293b;padding:10px 12px}
+  .header-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:8px}
+  .logo-icon{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#0891b2,#10b981);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:bold}
+  .logo h1{font-size:13px;font-weight:bold;line-height:1.2}
+  .logo p{font-size:10px;color:#94a3b8}
+  .reset-btn{padding:6px 10px;border-radius:8px;background:#1e293b;color:#cbd5e1;font-size:11px;font-weight:bold;border:none;cursor:pointer}
+  .reset-btn:active{background:#334155}
+  .tabs{display:flex;gap:4px;margin-top:10px;overflow-x:auto;padding-bottom:2px}
+  .tab-btn{padding:6px 12px;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;font-weight:bold;border:none;cursor:pointer;white-space:nowrap}
+  .tab-btn.active{background:#06b6d4;color:#fff}
+  main{padding:12px;max-width:1200px;margin:0 auto}
+  .section{display:none}
+  .section.active{display:block}
+  .card{background:#0f172a;border:1px solid #1e293b;border-radius:12px;padding:14px;margin-bottom:14px}
+  .card h2{font-size:15px;font-weight:bold;color:#fff;margin-bottom:4px}
+  .card p{font-size:11px;color:#94a3b8}
+  .type-selector{display:flex;gap:4px;margin-top:10px;flex-wrap:wrap;background:#1e293b;padding:4px;border-radius:10px}
+  .type-btn{padding:6px 12px;border-radius:6px;border:none;background:transparent;color:#94a3b8;font-size:11px;font-weight:bold;cursor:pointer}
+  .type-btn.active{background:#06b6d4;color:#fff}
+  .presets{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+  .preset-btn{padding:5px 10px;border-radius:6px;background:#1e293b;color:#cbd5e1;font-size:10px;border:none;cursor:pointer}
+  .preset-btn:active{background:#334155}
+  .svg-container{background:#020617;border:1px solid #1e293b;border-radius:10px;padding:10px;margin:10px 0;display:flex;justify-content:center;min-height:300px;align-items:center}
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+  .stat{background:rgba(30,41,59,.6);border:1px solid #1e293b;border-radius:8px;padding:10px}
+  .stat .label{font-size:10px;color:#94a3b8}
+  .stat .value{font-size:16px;font-weight:bold;font-family:monospace;margin-top:2px}
+  .controls{display:flex;flex-direction:column;gap:10px}
+  .control-group{border-top:1px solid #1e293b;padding-top:10px}
+  .control-group:first-child{border-top:none;padding-top:0}
+  .control-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px}
+  .control-label .name{color:#cbd5e1;font-weight:600}
+  .control-label .val{color:#22d3ee;font-family:monospace;font-weight:bold}
+  input[type=range]{width:100%;-webkit-appearance:none;height:6px;background:#334155;border-radius:6px;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#06b6d4;border:2px solid #0f172a;cursor:pointer}
+  .mode-toggle{display:flex;gap:4px;background:#1e293b;padding:3px;border-radius:8px;margin-bottom:10px}
+  .mode-btn{flex:1;padding:5px;border:none;border-radius:6px;background:transparent;color:#94a3b8;font-size:10px;font-weight:bold;cursor:pointer}
+  .mode-btn.active{background:#334155;color:#fff}
+  .binary-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+  .binary-btn{padding:8px;border-radius:8px;border:1px solid #1e293b;background:transparent;color:#94a3b8;font-size:11px;font-weight:bold;cursor:pointer}
+  .binary-btn.active{background:rgba(16,185,129,.1);color:#34d399;border-color:rgba(16,185,129,.4)}
+  .region-badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:bold;font-family:monospace;background:rgba(244,63,94,.1);color:#fb7185;border:1px solid rgba(244,63,94,.3);margin-bottom:8px}
+  .gate-card{background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:12px}
+  .gate-card h3{font-size:13px;color:#22d3ee;margin-bottom:8px}
+  .gate-card table{width:100%;font-size:11px;border-collapse:collapse}
+  .gate-card th,.gate-card td{padding:4px;border:1px solid #1e293b;text-align:center;font-family:monospace}
+  .gate-card th{background:#1e293b;color:#94a3b8}
+  .igate-tabs{display:flex;gap:4px;margin-top:10px;overflow-x:auto;background:#1e293b;padding:4px;border-radius:10px}
+  .igate-btn{padding:6px 10px;border-radius:6px;border:none;background:transparent;color:#94a3b8;font-size:11px;font-weight:bold;cursor:pointer;white-space:nowrap}
+  .igate-btn.active{background:#06b6d4;color:#fff}
+  .igate-inputs{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap}
+  .igate-input{padding:8px 16px;border-radius:8px;border:1px solid #1e293b;background:transparent;color:#94a3b8;font-size:13px;font-weight:bold;cursor:pointer;font-family:monospace}
+  .igate-input.on{background:rgba(16,185,129,.15);color:#34d399;border-color:rgba(16,185,129,.5)}
+  .output-badge{display:inline-block;padding:8px 20px;border-radius:8px;font-size:16px;font-weight:bold;font-family:monospace;background:rgba(244,63,94,.1);color:#fb7185;border:1px solid rgba(244,63,94,.3)}
+  .output-badge.on{background:rgba(16,185,129,.15);color:#34d399;border-color:rgba(16,185,129,.5)}
+  .equation{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:8px;font-family:monospace;font-size:11px;color:#e2e8f0;margin-top:6px}
+</style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200">
+<body>
 
-  <!-- Header Navbar -->
-  <header class="sticky top-0 z-50 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-600 to-emerald-500 flex items-center justify-center text-white shadow-sm font-bold text-lg">⚡</div>
-        <div>
-          <h1 class="text-base font-bold text-white tracking-tight">محاكي الترانزستور وبواباته المنطقية</h1>
-          <p class="text-[11px] text-slate-400">TransistorLab • يعمل بدون إنترنت</p>
-        </div>
-      </div>
-      <nav class="hidden md:flex items-center gap-1.5 p-1 bg-slate-800/80 rounded-xl">
-        <button onclick="switchTab('simulator')" id="nav-simulator" class="tab-btn px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all bg-cyan-500 text-white shadow-xs">محاكي الترانزستور</button>
-        <button onclick="switchTab('chart')" id="nav-chart" class="tab-btn px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white">لوحة البوابات</button>
-        <button onclick="switchTab('gates')" id="nav-gates" class="tab-btn px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white">بوابات CMOS</button>
-        <button onclick="switchTab('cascaded')" id="nav-cascaded" class="tab-btn px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white">الدوائر المدمجة</button>
-      </nav>
-      <div class="flex items-center gap-2">
-        <button onclick="resetSimulation()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-colors">إعادة الضبط</button>
+<header>
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <div>
+        <h1>محاكي الترانزستور والبوابات</h1>
+        <p>TransistorLab • يعمل بدون إنترنت</p>
       </div>
     </div>
-    <div class="md:hidden border-t border-slate-800 px-3 py-2 flex items-center justify-around overflow-x-auto gap-1">
-      <button onclick="switchTab('simulator')" id="mob-simulator" class="px-2.5 py-1 text-xs font-bold rounded bg-cyan-500 text-white whitespace-nowrap">الترانزستور</button>
-      <button onclick="switchTab('chart')" id="mob-chart" class="px-2.5 py-1 text-xs font-bold rounded text-slate-400 whitespace-nowrap">جدول البوابات</button>
-      <button onclick="switchTab('gates')" id="mob-gates" class="px-2.5 py-1 text-xs font-bold rounded text-slate-400 whitespace-nowrap">البوابات</button>
-      <button onclick="switchTab('cascaded')" id="mob-cascaded" class="px-2.5 py-1 text-xs font-bold rounded text-slate-400 whitespace-nowrap">الدوائر</button>
+    <button class="reset-btn" onclick="resetSimulation()">إعادة الضبط</button>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="simulator" onclick="switchTab('simulator')">الترانزستور</button>
+    <button class="tab-btn" data-tab="chart" onclick="switchTab('chart')">جدول البوابات</button>
+    <button class="tab-btn" data-tab="gates" onclick="switchTab('gates')">بوابات CMOS</button>
+    <button class="tab-btn" data-tab="cascaded" onclick="switchTab('cascaded')">الدوائر المدمجة</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===== TAB 1: SIMULATOR ===== -->
+  <section id="tab-simulator" class="section active">
+    <div class="card">
+      <h2>محاكي الترانزستور التفاعلي</h2>
+      <p>اختر النوع، اضبط القيم، راقب النتائج فوراً.</p>
+      <div class="type-selector">
+        <button class="type-btn active" data-type="NMOS" onclick="setTransistorType('NMOS')">NMOS</button>
+        <button class="type-btn" data-type="PMOS" onclick="setTransistorType('PMOS')">PMOS</button>
+        <button class="type-btn" data-type="NPN" onclick="setTransistorType('NPN')">NPN</button>
+        <button class="type-btn" data-type="PNP" onclick="setTransistorType('PNP')">PNP</button>
+      </div>
+      <div class="presets">
+        <button class="preset-btn" onclick="applyPreset('cutoff')">قطع (0)</button>
+        <button class="preset-btn" onclick="applyPreset('saturation')">تشبع (1)</button>
+        <button class="preset-btn" onclick="applyPreset('active')">مضخم</button>
+        <button class="preset-btn" onclick="applyPreset('threshold')">عتبة</button>
+      </div>
     </div>
-  </header>
 
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <div class="card">
+      <div id="region-badge" class="region-badge">منطقة القطع (Cut-off)</div>
+      <div class="svg-container">
+        <svg id="schematic-svg" viewBox="0 0 400 300" style="width:100%;max-width:400px;height:auto"></svg>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="label">تيار الحمل</div><div class="value" id="stat-current" style="color:#34d399">0.00 mA</div></div>
+        <div class="stat"><div class="label">جهد الخرج</div><div class="value" id="stat-vout" style="color:#22d3ee">5.00 V</div></div>
+        <div class="stat"><div class="label">الاستطاعة</div><div class="value" id="stat-power" style="color:#f59e0b">0.0 mW</div></div>
+        <div class="stat"><div class="label">الحالة</div><div class="value" id="stat-state" style="font-size:12px;color:#e2e8f0">مفتوح (OFF)</div></div>
+      </div>
+    </div>
 
-    <!-- TAB 1 -->
-    <section id="tab-simulator-content" class="space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xs">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse"></span>
-              <h2 class="text-lg font-bold text-white">واجهة محاكاة الترانزستور التفاعلية</h2>
-            </div>
-            <p class="mt-1 text-xs text-slate-400">اختر نوع الترانزستور، وتحكم في الجهد والتيار والمقاومة، وراقب القياسات اللحظية.</p>
-          </div>
-          <div class="flex items-center gap-1.5 p-1 bg-slate-800 rounded-xl shrink-0">
-            <button onclick="setTransistorType('NMOS')" id="type-NMOS" class="type-btn px-3.5 py-1.5 text-xs font-bold rounded-lg bg-cyan-500 text-white">NMOS</button>
-            <button onclick="setTransistorType('PMOS')" id="type-PMOS" class="type-btn px-3.5 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white">PMOS</button>
-            <button onclick="setTransistorType('NPN')" id="type-NPN" class="type-btn px-3.5 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white">NPN</button>
-            <button onclick="setTransistorType('PNP')" id="type-PNP" class="type-btn px-3.5 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white">PNP</button>
-          </div>
+    <div class="card controls">
+      <div class="control-group">
+        <div class="mode-toggle">
+          <button class="mode-btn active" id="mode-analog" onclick="setGateMode('analog')">تماثلي</button>
+          <button class="mode-btn" id="mode-binary" onclick="setGateMode('binary')">رقمي (0/1)</button>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
-          <span class="font-semibold text-slate-400">حالات سريعة:</span>
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <button onclick="applyPreset('cutoff')" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300">قطع (0)</button>
-            <button onclick="applyPreset('saturation')" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300">تشبع (1)</button>
-            <button onclick="applyPreset('active')" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300">مضخم</button>
-            <button onclick="applyPreset('threshold')" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300">عتبة</button>
+        <div id="analog-controls">
+          <div class="control-label"><span class="name">جهد الدخل V_in</span><span class="val" id="label-vin">3.50 V</span></div>
+          <input type="range" id="slider-vin" min="0" max="5" step="0.05" value="3.5" oninput="onVinChange(this.value)">
+        </div>
+        <div id="binary-controls" style="display:none">
+          <div class="control-label"><span class="name">القيمة المنطقية</span><span class="val" id="binary-val-label">1 (HIGH)</span></div>
+          <div class="binary-btns">
+            <button class="binary-btn" id="btn-bin-0" onclick="setGateBinary(0)">0 (LOW)</button>
+            <button class="binary-btn active" id="btn-bin-1" onclick="setGateBinary(1)">1 (HIGH)</button>
           </div>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xs space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
-            <div class="flex items-center gap-1 p-1 bg-slate-800 rounded-lg">
-              <button onclick="setViewMode('schematic')" id="view-schematic" class="view-btn px-3 py-1 text-xs font-bold rounded-md bg-slate-700 text-cyan-400">المخطط</button>
-              <button onclick="setViewMode('iv_curve')" id="view-iv_curve" class="view-btn px-3 py-1 text-xs font-bold rounded-md text-slate-400 hover:text-white">منحنى I-V</button>
-            </div>
-            <span id="region-badge" class="font-mono text-xs font-bold px-2.5 py-1 rounded-md border bg-rose-500/10 text-rose-400 border-rose-500/30">منطقة القطع</span>
-          </div>
-          <div class="w-full bg-slate-950 rounded-xl p-4 flex items-center justify-center min-h-[380px] border border-slate-800 relative overflow-hidden">
-            <div id="canvas-schematic" class="w-full flex justify-center">
-              <svg id="schematic-svg" viewBox="0 0 540 340" class="w-full max-w-[500px] h-auto select-none"></svg>
-            </div>
-            <div id="canvas-iv_curve" class="w-full hidden justify-center">
-              <svg id="iv-curve-svg" viewBox="0 0 540 320" class="w-full max-w-[500px] h-auto select-none"></svg>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
-            <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-800">
-              <div class="text-[11px] text-slate-400">تيار الحمل</div>
-              <div id="stat-current" class="text-lg font-mono font-bold text-emerald-400 tabular-nums">0.00 mA</div>
-            </div>
-            <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-800">
-              <div class="text-[11px] text-slate-400">جهد الخرج</div>
-              <div id="stat-vout" class="text-lg font-mono font-bold text-cyan-400 tabular-nums">5.00 V</div>
-            </div>
-            <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-800">
-              <div class="text-[11px] text-slate-400">استهلاك الطاقة</div>
-              <div id="stat-power" class="text-lg font-mono font-bold text-amber-500 tabular-nums">0.0 mW</div>
-            </div>
-            <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-800">
-              <div class="text-[11px] text-slate-400">حالة المفتاح</div>
-              <div id="stat-state" class="text-xs font-bold text-slate-200 mt-1">مفتوح</div>
-            </div>
-          </div>
-        </div>
+      <div class="control-group" id="bjt-current-group" style="display:none">
+        <div class="control-label"><span class="name">تيار القاعدة I_B</span><span class="val" id="label-ib" style="color:#34d399">120 μA</span></div>
+        <input type="range" id="slider-ib" min="0" max="400" step="5" value="120" oninput="onIbChange(this.value)">
+      </div>
 
-        <div class="lg:col-span-4 space-y-4">
-          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xs space-y-4">
-            <div class="flex items-center justify-between">
-              <h3 class="text-sm font-bold text-white">عناصر التحكم</h3>
-              <span id="device-family-badge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">MOSFET</span>
-            </div>
-            <div id="bjt-drive-mode-container" class="space-y-2 p-2.5 rounded-lg bg-cyan-500/5 border border-cyan-500/20 hidden">
-              <div class="text-[11px] font-bold text-cyan-400">طريقة التحكم:</div>
-              <div class="flex items-center gap-1 p-0.5 bg-slate-800 rounded-md">
-                <button onclick="setBjtDriveMode('voltage')" id="bjt-mode-v" class="flex-1 py-1 text-xs font-bold rounded bg-slate-700 text-white">جهد (V_B)</button>
-                <button onclick="setBjtDriveMode('current')" id="bjt-mode-i" class="flex-1 py-1 text-xs font-bold rounded text-slate-400 hover:text-white">تيار (I_B)</button>
-              </div>
-            </div>
-            <div id="voltage-drive-controls">
-              <div class="flex items-center gap-1 p-1 bg-slate-800 rounded-lg mb-3">
-                <button onclick="setGateMode('analog')" id="mode-analog" class="flex-1 py-1 text-xs font-bold rounded-md bg-slate-700 text-white">تماثلي</button>
-                <button onclick="setGateMode('binary')" id="mode-binary" class="flex-1 py-1 text-xs font-bold rounded-md text-slate-400 hover:text-white">رقمي</button>
-              </div>
-              <div id="control-analog-voltage" class="space-y-1.5">
-                <div class="flex items-center justify-between text-xs">
-                  <span class="font-semibold text-slate-300">جهد الدخل:</span>
-                  <span id="label-vin" class="font-mono font-bold text-cyan-400">3.50 V</span>
-                </div>
-                <input type="range" id="slider-vin" min="0" max="5" step="0.05" value="3.5" oninput="onVinChange(this.value)" class="w-full h-2" />
-                <div class="flex justify-between text-[10px] text-slate-400">
-                  <span>0.00 V</span>
-                  <span id="vth-indicator" class="text-amber-500 font-semibold">Vth = 1.2V</span>
-                  <span>5.0 V</span>
-                </div>
-              </div>
-              <div id="control-digital-binary" class="space-y-2 hidden">
-                <div class="flex items-center justify-between text-xs text-slate-400">
-                  <span>القيمة المنطقية:</span>
-                  <span id="binary-val-label" class="font-mono font-bold text-cyan-400">1 (HIGH)</span>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                  <button onclick="setGateBinary(0)" id="btn-binary-0" class="py-2 px-3 rounded-lg text-xs font-bold border border-slate-800 text-slate-400">0 (LOW)</button>
-                  <button onclick="setGateBinary(1)" id="btn-binary-1" class="py-2 px-3 rounded-lg text-xs font-bold border bg-emerald-500/10 text-emerald-400 border-emerald-500/40">1 (HIGH)</button>
-                </div>
-              </div>
-            </div>
-            <div id="control-bjt-current" class="space-y-1.5 hidden">
-              <div class="flex items-center justify-between text-xs
+      <div class="control-group" id="bjt-gain-group" style="display:none">
+        <div class="control-label"><span class="name">الكسب β</span><span class="val" id="label-beta">150</span></div>
+        <input type="range" id="slider-beta" min="50" max="300" step="10" value="150" oninput="onBetaChange(this.value)">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label"><span class="name">جهد التغذية V_DD</span><span class="val" id="label-vsupply" style="color:#fff">5.0 V</span></div>
+        <input type="range" id="slider-vsupply" min="1" max="12" step="0.5" value="5.0" oninput="onVSupplyChange(this.value)">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label"><span class="name">مقاومة الحمل R_L</span><span class="val" id="label-rload" style="color:#fff">250 Ω</span></div>
+        <input type="range" id="slider-rload" min="50" max="2000" step="50" value="250" oninput="onRLoadChange(this.value)">
+      </div>
+
+      <div class="control-group" id="vth-group">
+        <div class="control-label"><span class="name">جهد العتبة V_th</span><span class="val" id="label-vth" style="color:#f59e0b">1.20 V</span></div>
+        <input type="range" id="slider-vth" min="0.5" max="2.5" step="0.1" value="1.2" oninput="onVthChange(this.value)">
+      </div>
+
+      <div class="equation" id="equation-display">I_D = 0.5·K·(V_GS - V_th)² (تشبع)</div>
+    </div>
+  </section>
+
+  <!-- ===== TAB 2: GATES CHART ===== -->
+  <section id="tab-chart" class="section">
+    <div class="card">
+      <h2>لوحة البوابات المنطقية السبع</h2>
+      <p>الرموز القياسية وجداول الحقيقة.</p>
+    </div>
+    <div id="gates-grid"></div>
+  </section>
+
+  <!-- ===== TAB 3: CMOS GATES ===== -->
+  <section id="tab-gates" class="section">
+    <div class="card">
+      <h2>محاكي بوابات CMOS</h2>
+      <p>انقر على المدخلات A و B لمراقبة الخرج.</p>
+      <div class="igate-tabs">
+        <button class="igate-btn" data-gate="NOT" onclick="selectGate('NOT')">NOT</button>
+        <button class="igate-btn active" data-gate="NAND" onclick="selectGate('NAND')">NAND</button>
+        <button class="igate-btn" data-gate="AND" onclick="selectGate('AND')">AND</button>
+        <button class="igate-btn" data-gate="OR" onclick="selectGate('OR')">OR</button>
+        <button class="igate-btn" data-gate="NOR" onclick="selectGate('NOR')">NOR</button>
+        <button class="igate-btn" data-gate="XOR" onclick="selectGate('XOR')">XOR</button>
+        <button class="igate-btn" data-gate="XNOR" onclick="selectGate('XNOR')">XNOR</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px;color:#22d3ee;margin-bottom:10px" id="gate-title">NAND Gate</h3>
+      <div class="igate-inputs">
+        <button class="igate-input" id="input-A" onclick="toggleInput('A')">A = 0</button>
+        <button class="igate-input" id="input-B" onclick="toggleInput('B')">B = 0</button>
+      </div>
+      <div style="text-align:center;margin:16px 0">
+        <div style="font-size:12px;color:#94a3b8;margin-bottom:6px">الخرج Y</div>
+        <div class="output-badge" id="output-Y">Y = 0</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TAB 4: CASCADED ===== -->
+  <section id="tab-cascaded" class="section">
+    <div class="card">
+      <h2>الدوائر المدمجة (ALU)</h2>
+      <p>جمع الأعداد الثنائية 4-بت باستخدام بوابات منطقية.</p>
+    </div>
+    <div class="card">
+      <div class="control-label"><span class="name">العدد A (4 بت)</span><span class="val" id="alu-a-label">0000</span></div>
+      <input type="range" id="alu-a" min="0" max="15" value="0" oninput="updateALU()">
+      <div class="control-label" style="margin-top:12px"><span class="name">العدد B (4 بت)</span><span class="val" id="alu-b-label">0000</span></div>
+      <input type="range" id="alu-b" min="0" max="15" value="0" oninput="updateALU()">
+      <div style="margin-top:16px;text-align:center">
+        <div style="font-size:12px;color:#94a3b8;margin-bottom:6px">A + B</div>
+        <div class="output-badge on" id="alu-sum" style="font-size:20px">0</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ===================== STATE =====================
+var state = {
+  transistorType: 'NMOS',
+  gateMode: 'analog',
+  vin: 3.5,
+  binaryIn: 1,
+  ib: 120,
+  beta: 150,
+  vsupply: 5.0,
+  rload: 250,
+  vth: 1.2,
+  currentGate: 'NAND',
+  inputA: 0,
+  inputB: 0
+};
+
+// ===================== TABS =====================
+function switchTab(name) {
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  var sec = document.getElementById('tab-' + name);
+  if (sec) sec.classList.add('active');
+  var btn = document.querySelector('.tab-btn[data-tab="' + name + '"]');
+  if (btn) btn.classList.add('active');
+}
+
+// ===================== TRANSISTOR =====================
+function setTransistorType(type) {
+  state.transistorType = type;
+  document.querySelectorAll('.type-btn').forEach(function(b){
+    b.classList.toggle('active', b.dataset.type === type);
+  });
+  var isBJT = (type === 'NPN' || type === 'PNP');
+  document.getElementById('bjt-current-group').style.display = isBJT ? 'block' : 'none';
+  document.getElementById('bjt-gain-group').style.display = isBJT ? 'block' : 'none';
+  document.getElementById('vth-group').style.display = isBJT ? 'none' : 'block';
+  calculate();
+}
+
+function setGateMode(mode) {
+  state.gateMode = mode;
+  document.getElementById('mode-analog').classList.toggle('active', mode === 'analog');
+  document.getElementById('mode-binary').classList.toggle('active', mode === 'binary');
+  document.getElementById('analog-controls').style.display = mode === 'analog' ? 'block' : 'none';
+  document.getElementById('binary-controls').style.display = mode === 'binary' ? 'block' : 'none';
+  calculate();
+}
+
+function setGateBinary(v) {
+  state.binaryIn = v;
+  state.vin = v * 5;
+  document.getElementById('btn-bin-0').classList.toggle('active', v === 0);
+  document.getElementById('btn-bin-1').classList.toggle('active', v === 1);
+  document.getElementById('binary-val-label').textContent = v === 1 ? '1 (HIGH)' : '0 (LOW)';
+  calculate();
+}
+
+function onVinChange(v) {
+  state.vin = parseFloat(v);
+  document.getElementById('label-vin').textContent = state.vin.toFixed(2) + ' V';
+  calculate();
+}
+
+function onIbChange(v) {
+  state.ib = parseFloat(v);
+  document.getElementById('label-ib').textContent = state.ib.toFixed(0) + ' μA';
+  calculate();
+}
+
+function onBetaChange(v) {
+  state.beta = parseFloat(v);
+  document.getElementById('label-beta').textContent = state.beta.toFixed(0);
+  calculate();
+}
+
+function onVSupplyChange(v) {
+  state.vsupply = parseFloat(v);
+  document.getElementById('label-vsupply').textContent = state.vsupply.toFixed(1) + ' V';
+  calculate();
+}
+
+function onRLoadChange(v) {
+  state.rload = parseFloat(v);
+  document.getElementById('label-rload').textContent = state.rload.toFixed(0) + ' Ω';
+  calculate();
+}
+
+function onVthChange(v) {
+  state.vth = parseFloat(v);
+  document.getElementById('label-vth').textContent = state.vth.toFixed(2) + ' V';
+  calculate();
+}
+
+function applyPreset(name) {
+  if (name === 'cutoff') {
+    state.vin = 0; state.binaryIn = 0;
+  } else if (name === 'saturation') {
+    state.vin = 5; state.binaryIn = 1;
+  } else if (name === 'active') {
+    state.vin = 2.5;
+  } else if (name === 'threshold') {
+    state.vin = state.vth + 0.05;
+  }
+  document.getElementById('slider-vin').value = state.vin;
+  document.getElementById('label-vin').textContent = state.vin.toFixed(2) + ' V';
+  document.getElementById('binary-val-label').textContent = state.binaryIn === 1 ? '1 (HIGH)' : '0 (LOW)';
+  document.getElementById('btn-bin-0').classList.toggle('active', state.binaryIn === 0);
+  document.getElementById('btn-bin-1').classList.toggle('active', state.binaryIn === 1);
+  calculate();
+}
+
+function calculate() {
+  var type = state.transistorType;
+  var vdd = state.vsupply;
+  var rl = state.rload;
+  var id = 0, vout = vdd;
+  var isBJT = (type === 'NPN' || type === 'PNP');
+  var isPMOS = (type === 'PMOS' || type === 'PNP');
+
+  if (isBJT) {
+    var ib = state.ib / 1000000;
+    var ic = ib * state.beta;
+    var vce = vdd - ic * rl;
+    if (vce < 0.2) { vce = 0.2; ic = (vdd - 0.2) / rl; }
+    id = ic;
+    vout = isPMOS ? (vdd - vce) : vce;
+  } else {
+    var vgs = isPMOS ? (vdd - state.vin) : state.vin;
+    if (vgs > state.vth) {
+      var k = 0.002;
+      var id_sat = 0.5 * k * Math.pow(vgs - state.vth, 2);
+      var id_lin = k * ((vgs - state.vth) * (vdd) - 0.5 * vdd * vdd);
+      if (vdd - id_sat * rl < vgs - state.vth) {
+        id = (vgs - state.vth) / rl;
+      } else {
+        id = id_sat;
+      }
+      vout = vdd - id * rl;
+      if (vout < 0) vout = 0;
+    }
+  }
+
+  var power = id * vout;
+  var region = 'قطع';
+  var regionColor = '#fb7185';
+  if (id > 0.0001) {
+    if (vout < 0.5) { region = 'تشبع'; regionColor = '#34d399'; }
+    else { region = 'نشط'; regionColor = '#22d3ee'; }
+  }
+
+  document.getElementById('stat-current').textContent = (id * 1000).toFixed(2) + ' mA';
+  document.getElementById('stat-vout').textContent = vout.toFixed(2) + ' V';
+  document.getElementById('stat-power').textContent = (power * 1000).toFixed(1) + ' mW';
+  document.getElementById('stat-state').textContent = id > 0.0001 ? 'مغلق (ON)' : 'مفتوح (OFF)';
+
+  var badge = document.getElementById('region-badge');
+  badge.textContent = 'منطقة ' + region;
+  badge.style.color = regionColor;
+  badge.style.borderColor = regionColor + '55';
+  badge.style.background = regionColor + '15';
+
+  drawSchematic();
+}
+
+function drawSchematic() {
+  var svg = document.getElementById('schematic-svg');
+  var vout = parseFloat(document.getElementById('stat-vout').textContent) || 0;
+  var on = vout < 2.5;
+  var color = on ? '#34d399' : '#64748b';
+  svg.innerHTML = 
+    '<line x1="50" y1="50" x2="50" y2="250" stroke="#475569" stroke
