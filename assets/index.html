@@ -481,7 +481,7 @@ const gateState = {};
 GATES.forEach(g => { gateState[g.id] = new Array(g.inputs).fill(0); });
 
 /* ============================================================
-   رسم رموز البوابات كـ SVG (بخطوط إدخال/خرج قابلة للتلوين)
+   رسم رموز البوابات كـ SVG
    ============================================================ */
 function gateSVG(id, isOne) {
   const dim = '#4a5568';
@@ -537,16 +537,17 @@ function buildCard(gate) {
     inputsDiv.appendChild(btn);
   }
 
-  buildTruthTable(gate.id);
+  const tableEl = card.querySelector(`#table-${gate.id}`);
+  buildTruthTable(gate.id, tableEl);
+
   return card;
 }
 
 /* ============================================================
    بناء جدول الحقيقة
    ============================================================ */
-function buildTruthTable(id) {
+function buildTruthTable(id, tableElement) {
   const gate = GATES.find(g => g.id === id);
-  const table = document.getElementById('table-' + id);
 
   let head = '<thead><tr>';
   for (let i = 0; i < gate.inputs; i++) head += `<th>${String.fromCharCode(65 + i)}</th>`;
@@ -562,7 +563,7 @@ function buildTruthTable(id) {
   });
   body += '</tbody>';
 
-  table.innerHTML = head + body;
+  tableElement.innerHTML = head + body;
 }
 
 /* ============================================================
@@ -574,14 +575,13 @@ function toggleInput(gateId, index) {
 }
 
 /* ============================================================
-   تحديث حالة البوابة (أزرار + LED + جدول + ألوان SVG)
+   تحديث حالة البوابة
    ============================================================ */
 function updateGate(id) {
   const gate = GATES.find(g => g.id === id);
   const state = gateState[id];
   const out = gate.fn(...state);
 
-  // تحديث الأزرار وتلوين خطوط الإدخال
   state.forEach((val, i) => {
     const btn = document.getElementById(`input-${id}-${i}`);
     btn.textContent = `${String.fromCharCode(65 + i)} = ${val}`;
@@ -591,18 +591,15 @@ function updateGate(id) {
     if (line) line.setAttribute('stroke', val ? '#2eff9a' : '#4a5568');
   });
 
-  // LED
   const led = document.getElementById('led-' + id);
   const lbl = document.getElementById('ledlabel-' + id);
   led.className = 'led ' + (out ? 'on' : 'off');
   lbl.className = 'led-label ' + (out ? 'on' : 'off');
   lbl.textContent = `Y = ${out} (${out ? 'ON' : 'OFF'})`;
 
-  // تلوين خط الخرج
   const outLine = document.getElementById(`out-${id}`);
   if (outLine) outLine.setAttribute('stroke', out ? '#2eff9a' : '#ef4444');
 
-  // إبراز الصف النشط في جدول الحقيقة
   document.getElementById('table-' + id).querySelectorAll('tbody tr').forEach(tr => {
     const inputs = tr.dataset.inputs.split(',').map(Number);
     tr.classList.toggle('active', inputs.every((v, i) => v === state[i]));
@@ -619,52 +616,31 @@ const VCE_SAT = 0.2;
 
 function drawTransistor() {
   document.getElementById('transistorSvg').innerHTML = `
-    <!-- الدائرة الخارجية -->
     <circle cx="110" cy="110" r="78" fill="none" stroke="#06b6d4" stroke-width="2" opacity="0.35"/>
-
-    <!-- القاعدة: الشريط العمودي -->
     <line x1="85" y1="65" x2="85" y2="155" stroke="#06b6d4" stroke-width="4" stroke-linecap="round"/>
-
-    <!-- سلك القاعدة الداخلي -->
     <line x1="110" y1="110" x2="85" y2="110" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round"/>
-    <!-- سلك القاعدة الخارجي -->
     <line x1="30" y1="110" x2="85" y2="110" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round"/>
-
-    <!-- المجمع -->
     <line x1="85" y1="90" x2="130" y2="65" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round"/>
     <line x1="130" y1="65" x2="130" y2="30" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round"/>
-
-    <!-- المبث -->
     <line x1="85" y1="130" x2="130" y2="155" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round"/>
     <line x1="130" y1="155" x2="130" y2="190" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round"/>
-
-    <!-- سهم NPN على المبث (للخارج) -->
     <polygon points="115,147 103,145 107,138" fill="#06b6d4"/>
-
-    <!-- تسميات الأقطاب -->
     <text x="18" y="105" font-family="monospace" font-size="13" font-weight="bold" fill="#06b6d4">B</text>
     <text x="140" y="30" font-family="monospace" font-size="13" font-weight="bold" fill="#06b6d4">C</text>
     <text x="140" y="200" font-family="monospace" font-size="13" font-weight="bold" fill="#06b6d4">E</text>
-
-    <!-- أسماء الأقطاب بالإنجليزية -->
     <text x="35" y="100" font-size="9" fill="#7a8ba0">Base</text>
     <text x="140" y="65" font-size="9" fill="#7a8ba0">Collector</text>
     <text x="140" y="170" font-size="9" fill="#7a8ba0">Emitter</text>
   `;
 }
 
-/* ============================================================
-   حساب حالة الترانزستور وتحديث المؤشرات
-   ============================================================ */
 function updateTransistor() {
   const ib = parseFloat(document.getElementById('ibSlider').value);
   document.getElementById('ibLabel').textContent = ib.toFixed(0) + ' μA';
 
-  // I_C = β × I_B (بالميلي أمبير)
   let ic = ib * 1e-6 * BETA * 1000;
   let vce = VCC - (ic / 1000) * RC;
 
-  // منطقة التشبع
   if (vce < VCE_SAT) {
     vce = VCE_SAT;
     ic = ((VCC - VCE_SAT) / RC) * 1000;
@@ -680,40 +656,4 @@ function updateTransistor() {
   stEl.textContent = on ? 'ON' : 'OFF';
   stEl.className = 's-value ' + (on ? 'on' : 'off');
 
-  const led = document.getElementById('transistorLed');
-  led.className = 'led ' + (on ? 'on' : 'off');
-
-  const lbl = document.getElementById('transistorLedLabel');
-  lbl.className = 'led-label ' + (on ? 'on' : 'off');
-  lbl.textContent = on ? 'الحمل يعمل' : 'الحمل مطفأ';
-
-  // شدة التوهج تتناسب مع تيار المجمع
-  if (on) {
-    const intensity = Math.min(1, ic / 22);
-    led.style.boxShadow = `
-      0 0 ${8 + intensity * 12}px var(--green-bright),
-      0 0 ${16 + intensity * 24}px var(--green),
-      0 0 ${30 + intensity * 40}px rgba(46,255,154,${0.3 + intensity * 0.4})
-    `;
-  } else {
-    led.style.boxShadow = '';
-  }
-}
-
-/* ============================================================
-   التهيئة
-   ============================================================ */
-function init() {
-  const grid = document.getElementById('gatesGrid');
-  GATES.forEach(g => grid.appendChild(buildCard(g)));
-  GATES.forEach(g => updateGate(g.id));
-
-  drawTransistor();
-  document.getElementById('ibSlider').addEventListener('input', updateTransistor);
-  updateTransistor();
-}
-
-document.addEventListener('DOMContentLoaded', init);
-</script>
-</body>
-</html>
+  const led = document.getElementById('transis
