@@ -1,69 +1,68 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>TransistorLab</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
-  body{background:#020617;color:#f1f5f9;min-height:100vh;padding-bottom:20px}
-  header{position:sticky;top:0;z-index:50;background:rgba(15,23,42,.95);backdrop-filter:blur(10px);border-bottom:1px solid #1e293b;padding:10px 12px}
-  .header-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
-  .logo{display:flex;align-items:center;gap:8px}
-  .logo-icon{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#0891b2,#10b981);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:bold}
-  .logo h1{font-size:13px;font-weight:bold;line-height:1.2}
-  .logo p{font-size:10px;color:#94a3b8}
-  .reset-btn{padding:6px 10px;border-radius:8px;background:#1e293b;color:#cbd5e1;font-size:11px;font-weight:bold;border:none;cursor:pointer}
-  .reset-btn:active{background:#334155}
-  .tabs{display:flex;gap:4px;margin-top:10px;overflow-x:auto;padding-bottom:2px}
-  .tab-btn{padding:6px 12px;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;font-weight:bold;border:none;cursor:pointer;white-space:nowrap}
-  .tab-btn.active{background:#06b6d4;color:#fff}
-  main{padding:12px;max-width:1200px;margin:0 auto}
-  .section{display:none}
-  .section.active{display:block}
-  .card{background:#0f172a;border:1px solid #1e293b;border-radius:12px;padding:14px;margin-bottom:14px}
-  .card h2{font-size:15px;font-weight:bold;color:#fff;margin-bottom:4px}
-  .card p{font-size:11px;color:#94a3b8}
-  .type-selector{display:flex;gap:4px;margin-top:10px;flex-wrap:wrap;background:#1e293b;padding:4px;border-radius:10px}
-  .type-btn{padding:6px 12px;border-radius:6px;border:none;background:transparent;color:#94a3b8;font-size:11px;font-weight:bold;cursor:pointer}
-  .type-btn.active{background:#06b6d4;color:#fff}
-  .presets{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
-  .preset-btn{padding:5px 10px;border-radius:6px;background:#1e293b;color:#cbd5e1;font-size:10px;border:none;cursor:pointer}
-  .preset-btn:active{background:#334155}
-  .svg-container{background:#020617;border:1px solid #1e293b;border-radius:10px;padding:10px;margin:10px 0;display:flex;justify-content:center;min-height:300px;align-items:center}
-  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
-  .stat{background:rgba(30,41,59,.6);border:1px solid #1e293b;border-radius:8px;padding:10px}
-  .stat .label{font-size:10px;color:#94a3b8}
-  .stat .value{font-size:16px;font-weight:bold;font-family:monospace;margin-top:2px}
-  .controls{display:flex;flex-direction:column;gap:10px}
-  .control-group{border-top:1px solid #1e293b;padding-top:10px}
-  .control-group:first-child{border-top:none;padding-top:0}
-  .control-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px}
-  .control-label .name{color:#cbd5e1;font-weight:600}
-  .control-label .val{color:#22d3ee;font-family:monospace;font-weight:bold}
-  input[type=range]{width:100%;-webkit-appearance:none;height:6px;background:#334155;border-radius:6px;outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#06b6d4;border:2px solid #0f172a;cursor:pointer}
-  .mode-toggle{display:flex;gap:4px;background:#1e293b;padding:3px;border-radius:8px;margin-bottom:10px}
-  .mode-btn{flex:1;padding:5px;border:none;border-radius:6px;background:transparent;color:#94a3b8;font-size:10px;font-weight:bold;cursor:pointer}
-  .mode-btn.active{background:#334155;color:#fff}
-  .binary-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-  .binary-btn{padding:8px;border-radius:8px;border:1px solid #1e293b;background:transparent;color:#94a3b8;font-size:11px;font-weight:bold;cursor:pointer}
-  .binary-btn.active{background:rgba(16,185,129,.1);color:#34d399;border-color:rgba(16,185,129,.4)}
-  .region-badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:bold;font-family:monospace;background:rgba(244,63,94,.1);color:#fb7185;border:1px solid rgba(244,63,94,.3);margin-bottom:8px}
-  .gate-card{background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:12px}
-  .gate-card h3{font-size:13px;color:#22d3ee;margin-bottom:8px}
-  .gate-card table{width:100%;font-size:11px;border-collapse:collapse}
-  .gate-card th,.gate-card td{padding:4px;border:1px solid #1e293b;text-align:center;font-family:monospace}
-  .gate-card th{background:#1e293b;color:#94a3b8}
-  .igate-tabs{display:flex;gap:4px;margin-top:10px;overflow-x:auto;background:#1e293b;padding:4px;border-radius:10px}
-  .igate-btn{padding:6px 10px;border-radius:6px;border:none;background:transparent;color:#94a3b8;font-size:11px;font-weight:bold;cursor:pointer;white-space:nowrap}
-  .igate-btn.active{background:#06b6d4;color:#fff}
-  .igate-inputs{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap}
-  .igate-input{padding:8px 16px;border-radius:8px;border:1px solid #1e293b;background:transparent;color:#94a3b8;font-size:13px;font-weight:bold;cursor:pointer;font-family:monospace}
-  .igate-input.on{background:rgba(16,185,129,.15);color:#34d399;border-color:rgba(16,185,129,.5)}
-  .output-badge{display:inline-block;padding:8px 20px;border-radius:8px;font-size:16px;font-weight:bold;font-family:monospace;background:rgba(244,63,94,.1);color:#fb7185;border:1px solid rgba(244,63,94,.3)}
-  .output-badge.on{background:rgba(16,185,129,.15);color:#34d399;border-color:rgba(16,185,129,.5)}
-  .equation{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:8px;font-family:monospace;font-size:11px;color:#e2e8f0;margin-top:6px}
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+body{background:#020617;color:#f1f5f9;min-height:100vh;padding-bottom:20px}
+header{position:sticky;top:0;z-index:50;background:rgba(15,23,42,.95);border-bottom:1px solid #1e293b;padding:10px 12px}
+.header-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-icon{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#0891b2,#10b981);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:bold}
+.logo h1{font-size:13px;font-weight:bold}
+.logo p{font-size:10px;color:#94a3b8}
+.reset-btn{padding:6px 10px;border-radius:8px;background:#1e293b;color:#cbd5e1;font-size:11px;font-weight:bold;border:none;cursor:pointer}
+.tabs{display:flex;gap:4px;margin-top:10px;overflow-x:auto}
+.tab-btn{padding:6px 12px;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;font-weight:bold;border:none;cursor:pointer;white-space:nowrap}
+.tab-btn.active{background:#06b6d4;color:#fff}
+main{padding:12px;max-width:1200px;margin:0 auto}
+.section{display:none}
+.section.active{display:block}
+.card{background:#0f172a;border:1px solid #1e293b;border-radius:12px;padding:14px;margin-bottom:14px}
+.card h2{font-size:15px;color:#fff;margin-bottom:4px}
+.card p{font-size:11px;color:#94a3b8}
+.type-selector{display:flex;gap:4px;margin-top:10px;flex-wrap:wrap;background:#1e293b;padding:4px;border-radius:10px}
+.type-btn{padding:6px 12px;border-radius:6px;border:none;background:transparent;color:#94a3b8;font-size:11px;font-weight:bold;cursor:pointer}
+.type-btn.active{background:#06b6d4;color:#fff}
+.presets{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.preset-btn{padding:5px 10px;border-radius:6px;background:#1e293b;color:#cbd5e1;font-size:10px;border:none;cursor:pointer}
+.svg-container{background:#020617;border:1px solid #1e293b;border-radius:10px;padding:10px;margin:10px 0;display:flex;justify-content:center;min-height:300px;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.stat{background:rgba(30,41,59,.6);border:1px solid #1e293b;border-radius:8px;padding:10px}
+.stat .label{font-size:10px;color:#94a3b8}
+.stat .value{font-size:16px;font-weight:bold;font-family:monospace;margin-top:2px}
+.controls{display:flex;flex-direction:column;gap:10px}
+.control-group{border-top:1px solid #1e293b;padding-top:10px}
+.control-group:first-child{border-top:none;padding-top:0}
+.control-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px}
+.control-label .name{color:#cbd5e1;font-weight:600}
+.control-label .val{color:#22d3ee;font-family:monospace;font-weight:bold}
+input[type=range]{width:100%;-webkit-appearance:none;height:6px;background:#334155;border-radius:6px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#06b6d4;border:2px solid #0f172a;cursor:pointer}
+.mode-toggle{display:flex;gap:4px;background:#1e293b;padding:3px;border-radius:8px;margin-bottom:10px}
+.mode-btn{flex:1;padding:5px;border:none;border-radius:6px;background:transparent;color:#94a3b8;font-size:10px;font-weight:bold;cursor:pointer}
+.mode-btn.active{background:#334155;color:#fff}
+.binary-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.binary-btn{padding:8px;border-radius:8px;border:1px solid #1e293b;background:transparent;color:#94a3b8;font-size:11px;font-weight:bold;cursor:pointer}
+.binary-btn.active{background:rgba(16,185,129,.1);color:#34d399;border-color:rgba(16,185,129,.4)}
+.region-badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:bold;font-family:monospace;background:rgba(244,63,94,.1);color:#fb7185;border:1px solid rgba(244,63,94,.3);margin-bottom:8px}
+#gates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.gate-card{background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:12px}
+.gate-card h3{font-size:13px;color:#22d3ee;margin-bottom:8px}
+.gate-card table{width:100%;font-size:11px;border-collapse:collapse}
+.gate-card th,.gate-card td{padding:4px;border:1px solid #1e293b;text-align:center;font-family:monospace}
+.gate-card th{background:#1e293b;color:#94a3b8}
+.igate-tabs{display:flex;gap:4px;margin-top:10px;overflow-x:auto;background:#1e293b;padding:4px;border-radius:10px}
+.igate-btn{padding:6px 10px;border-radius:6px;border:none;background:transparent;color:#94a3b8;font-size:11px;font-weight:bold;cursor:pointer;white-space:nowrap}
+.igate-btn.active{background:#06b6d4;color:#fff}
+.igate-inputs{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap}
+.igate-input{padding:8px 16px;border-radius:8px;border:1px solid #1e293b;background:transparent;color:#94a3b8;font-size:13px;font-weight:bold;cursor:pointer;font-family:monospace}
+.igate-input.on{background:rgba(16,185,129,.15);color:#34d399;border-color:rgba(16,185,129,.5)}
+.output-badge{display:inline-block;padding:8px 20px;border-radius:8px;font-size:16px;font-weight:bold;font-family:monospace;background:rgba(244,63,94,.1);color:#fb7185;border:1px solid rgba(244,63,94,.3)}
+.output-badge.on{background:rgba(16,185,129,.15);color:#34d399;border-color:rgba(16,185,129,.5)}
+.equation{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:8px;font-family:monospace;font-size:11px;color:#e2e8f0;margin-top:6px}
 </style>
 </head>
 <body>
@@ -72,12 +71,9 @@
   <div class="header-top">
     <div class="logo">
       <div class="logo-icon">⚡</div>
-      <div>
-        <h1>محاكي الترانزستور والبوابات</h1>
-        <p>TransistorLab • يعمل بدون إنترنت</p>
-      </div>
+      <div><h1>محاكي الترانزستور والبوابات</h1><p>TransistorLab • بدون إنترنت</p></div>
     </div>
-    <button class="reset-btn" onclick="resetSimulation()">إعادة الضبط</button>
+    <button class="reset-btn" onclick="resetSim()">إعادة الضبط</button>
   </div>
   <div class="tabs">
     <button class="tab-btn active" data-tab="simulator" onclick="switchTab('simulator')">الترانزستور</button>
@@ -88,313 +84,305 @@
 </header>
 
 <main>
-
-  <!-- ===== TAB 1: SIMULATOR ===== -->
   <section id="tab-simulator" class="section active">
     <div class="card">
       <h2>محاكي الترانزستور التفاعلي</h2>
-      <p>اختر النوع، اضبط القيم، راقب النتائج فوراً.</p>
+      <p>اختر النوع واضبط القيم وراقب النتائج.</p>
       <div class="type-selector">
-        <button class="type-btn active" data-type="NMOS" onclick="setTransistorType('NMOS')">NMOS</button>
-        <button class="type-btn" data-type="PMOS" onclick="setTransistorType('PMOS')">PMOS</button>
-        <button class="type-btn" data-type="NPN" onclick="setTransistorType('NPN')">NPN</button>
-        <button class="type-btn" data-type="PNP" onclick="setTransistorType('PNP')">PNP</button>
+        <button class="type-btn active" data-type="NMOS" onclick="setType('NMOS')">NMOS</button>
+        <button class="type-btn" data-type="PMOS" onclick="setType('PMOS')">PMOS</button>
+        <button class="type-btn" data-type="NPN" onclick="setType('NPN')">NPN</button>
+        <button class="type-btn" data-type="PNP" onclick="setType('PNP')">PNP</button>
       </div>
       <div class="presets">
-        <button class="preset-btn" onclick="applyPreset('cutoff')">قطع (0)</button>
-        <button class="preset-btn" onclick="applyPreset('saturation')">تشبع (1)</button>
-        <button class="preset-btn" onclick="applyPreset('active')">مضخم</button>
-        <button class="preset-btn" onclick="applyPreset('threshold')">عتبة</button>
+        <button class="preset-btn" onclick="preset('cutoff')">قطع (0)</button>
+        <button class="preset-btn" onclick="preset('sat')">تشبع (1)</button>
+        <button class="preset-btn" onclick="preset('active')">مضخم</button>
+        <button class="preset-btn" onclick="preset('thr')">عتبة</button>
       </div>
     </div>
-
     <div class="card">
-      <div id="region-badge" class="region-badge">منطقة القطع (Cut-off)</div>
-      <div class="svg-container">
-        <svg id="schematic-svg" viewBox="0 0 400 300" style="width:100%;max-width:400px;height:auto"></svg>
-      </div>
+      <div id="region-badge" class="region-badge">منطقة القطع</div>
+      <div class="svg-container"><svg id="svg1" viewBox="0 0 400 300" style="width:100%;max-width:400px;height:auto"></svg></div>
       <div class="stats">
-        <div class="stat"><div class="label">تيار الحمل</div><div class="value" id="stat-current" style="color:#34d399">0.00 mA</div></div>
-        <div class="stat"><div class="label">جهد الخرج</div><div class="value" id="stat-vout" style="color:#22d3ee">5.00 V</div></div>
-        <div class="stat"><div class="label">الاستطاعة</div><div class="value" id="stat-power" style="color:#f59e0b">0.0 mW</div></div>
-        <div class="stat"><div class="label">الحالة</div><div class="value" id="stat-state" style="font-size:12px;color:#e2e8f0">مفتوح (OFF)</div></div>
+        <div class="stat"><div class="label">تيار الحمل</div><div class="value" id="st-cur" style="color:#34d399">0.00 mA</div></div>
+        <div class="stat"><div class="label">جهد الخرج</div><div class="value" id="st-vout" style="color:#22d3ee">5.00 V</div></div>
+        <div class="stat"><div class="label">الاستطاعة</div><div class="value" id="st-pw" style="color:#f59e0b">0.0 mW</div></div>
+        <div class="stat"><div class="label">الحالة</div><div class="value" id="st-state" style="font-size:12px;color:#e2e8f0">مفتوح</div></div>
       </div>
     </div>
-
     <div class="card controls">
       <div class="control-group">
         <div class="mode-toggle">
-          <button class="mode-btn active" id="mode-analog" onclick="setGateMode('analog')">تماثلي</button>
-          <button class="mode-btn" id="mode-binary" onclick="setGateMode('binary')">رقمي (0/1)</button>
+          <button class="mode-btn active" id="m-a" onclick="setMode('analog')">تماثلي</button>
+          <button class="mode-btn" id="m-b" onclick="setMode('binary')">رقمي</button>
         </div>
-        <div id="analog-controls">
-          <div class="control-label"><span class="name">جهد الدخل V_in</span><span class="val" id="label-vin">3.50 V</span></div>
-          <input type="range" id="slider-vin" min="0" max="5" step="0.05" value="3.5" oninput="onVinChange(this.value)">
+        <div id="an-ctl">
+          <div class="control-label"><span class="name">جهد الدخل V_in</span><span class="val" id="l-vin">3.50 V</span></div>
+          <input type="range" id="s-vin" min="0" max="5" step="0.05" value="3.5" oninput="onVin(this.value)">
         </div>
-        <div id="binary-controls" style="display:none">
-          <div class="control-label"><span class="name">القيمة المنطقية</span><span class="val" id="binary-val-label">1 (HIGH)</span></div>
+        <div id="bin-ctl" style="display:none">
+          <div class="control-label"><span class="name">القيمة المنطقية</span><span class="val" id="b-val">1 (HIGH)</span></div>
           <div class="binary-btns">
-            <button class="binary-btn" id="btn-bin-0" onclick="setGateBinary(0)">0 (LOW)</button>
-            <button class="binary-btn active" id="btn-bin-1" onclick="setGateBinary(1)">1 (HIGH)</button>
+            <button class="binary-btn" id="bb0" onclick="setBin(0)">0 (LOW)</button>
+            <button class="binary-btn active" id="bb1" onclick="setBin(1)">1 (HIGH)</button>
           </div>
         </div>
       </div>
-
-      <div class="control-group" id="bjt-current-group" style="display:none">
-        <div class="control-label"><span class="name">تيار القاعدة I_B</span><span class="val" id="label-ib" style="color:#34d399">120 μA</span></div>
-        <input type="range" id="slider-ib" min="0" max="400" step="5" value="120" oninput="onIbChange(this.value)">
+      <div class="control-group" id="ib-g" style="display:none">
+        <div class="control-label"><span class="name">تيار القاعدة I_B</span><span class="val" id="l-ib" style="color:#34d399">120 μA</span></div>
+        <input type="range" id="s-ib" min="0" max="400" step="5" value="120" oninput="onIb(this.value)">
       </div>
-
-      <div class="control-group" id="bjt-gain-group" style="display:none">
-        <div class="control-label"><span class="name">الكسب β</span><span class="val" id="label-beta">150</span></div>
-        <input type="range" id="slider-beta" min="50" max="300" step="10" value="150" oninput="onBetaChange(this.value)">
+      <div class="control-group" id="beta-g" style="display:none">
+        <div class="control-label"><span class="name">الكسب β</span><span class="val" id="l-beta">150</span></div>
+        <input type="range" id="s-beta" min="50" max="300" step="10" value="150" oninput="onBeta(this.value)">
       </div>
-
       <div class="control-group">
-        <div class="control-label"><span class="name">جهد التغذية V_DD</span><span class="val" id="label-vsupply" style="color:#fff">5.0 V</span></div>
-        <input type="range" id="slider-vsupply" min="1" max="12" step="0.5" value="5.0" oninput="onVSupplyChange(this.value)">
+        <div class="control-label"><span class="name">جهد التغذية V_DD</span><span class="val" id="l-vdd" style="color:#fff">5.0 V</span></div>
+        <input type="range" id="s-vdd" min="1" max="12" step="0.5" value="5" oninput="onVdd(this.value)">
       </div>
-
       <div class="control-group">
-        <div class="control-label"><span class="name">مقاومة الحمل R_L</span><span class="val" id="label-rload" style="color:#fff">250 Ω</span></div>
-        <input type="range" id="slider-rload" min="50" max="2000" step="50" value="250" oninput="onRLoadChange(this.value)">
+        <div class="control-label"><span class="name">مقاومة الحمل R_L</span><span class="val" id="l-rl" style="color:#fff">250 Ω</span></div>
+        <input type="range" id="s-rl" min="50" max="2000" step="50" value="250" oninput="onRl(this.value)">
       </div>
-
-      <div class="control-group" id="vth-group">
-        <div class="control-label"><span class="name">جهد العتبة V_th</span><span class="val" id="label-vth" style="color:#f59e0b">1.20 V</span></div>
-        <input type="range" id="slider-vth" min="0.5" max="2.5" step="0.1" value="1.2" oninput="onVthChange(this.value)">
+      <div class="control-group" id="vth-g">
+        <div class="control-label"><span class="name">جهد العتبة V_th</span><span class="val" id="l-vth" style="color:#f59e0b">1.20 V</span></div>
+        <input type="range" id="s-vth" min="0.5" max="2.5" step="0.1" value="1.2" oninput="onVth(this.value)">
       </div>
-
-      <div class="equation" id="equation-display">I_D = 0.5·K·(V_GS - V_th)² (تشبع)</div>
     </div>
   </section>
 
-  <!-- ===== TAB 2: GATES CHART ===== -->
   <section id="tab-chart" class="section">
-    <div class="card">
-      <h2>لوحة البوابات المنطقية السبع</h2>
-      <p>الرموز القياسية وجداول الحقيقة.</p>
-    </div>
+    <div class="card"><h2>لوحة البوابات المنطقية السبع</h2><p>الرموز وجداول الحقيقة.</p></div>
     <div id="gates-grid"></div>
   </section>
 
-  <!-- ===== TAB 3: CMOS GATES ===== -->
   <section id="tab-gates" class="section">
     <div class="card">
       <h2>محاكي بوابات CMOS</h2>
-      <p>انقر على المدخلات A و B لمراقبة الخرج.</p>
-      <div class="igate-tabs">
-        <button class="igate-btn" data-gate="NOT" onclick="selectGate('NOT')">NOT</button>
-        <button class="igate-btn active" data-gate="NAND" onclick="selectGate('NAND')">NAND</button>
-        <button class="igate-btn" data-gate="AND" onclick="selectGate('AND')">AND</button>
-        <button class="igate-btn" data-gate="OR" onclick="selectGate('OR')">OR</button>
-        <button class="igate-btn" data-gate="NOR" onclick="selectGate('NOR')">NOR</button>
-        <button class="igate-btn" data-gate="XOR" onclick="selectGate('XOR')">XOR</button>
-        <button class="igate-btn" data-gate="XNOR" onclick="selectGate('XNOR')">XNOR</button>
-      </div>
+      <p>انقر على المدخلات لمراقبة الخرج.</p>
+      <div class="igate-tabs" id="gtabs"></div>
     </div>
     <div class="card">
-      <h3 style="font-size:14px;color:#22d3ee;margin-bottom:10px" id="gate-title">NAND Gate</h3>
-      <div class="igate-inputs">
-        <button class="igate-input" id="input-A" onclick="toggleInput('A')">A = 0</button>
-        <button class="igate-input" id="input-B" onclick="toggleInput('B')">B = 0</button>
-      </div>
+      <h3 style="font-size:14px;color:#22d3ee;margin-bottom:10px" id="gtitle">NAND</h3>
+      <div class="igate-inputs" id="gin"></div>
       <div style="text-align:center;margin:16px 0">
         <div style="font-size:12px;color:#94a3b8;margin-bottom:6px">الخرج Y</div>
-        <div class="output-badge" id="output-Y">Y = 0</div>
+        <div class="output-badge" id="outY">Y = 0</div>
       </div>
     </div>
   </section>
 
-  <!-- ===== TAB 4: CASCADED ===== -->
   <section id="tab-cascaded" class="section">
+    <div class="card"><h2>الدوائر المدمجة (ALU)</h2><p>جمع الأعداد الثنائية 4-بت.</p></div>
     <div class="card">
-      <h2>الدوائر المدمجة (ALU)</h2>
-      <p>جمع الأعداد الثنائية 4-بت باستخدام بوابات منطقية.</p>
-    </div>
-    <div class="card">
-      <div class="control-label"><span class="name">العدد A (4 بت)</span><span class="val" id="alu-a-label">0000</span></div>
-      <input type="range" id="alu-a" min="0" max="15" value="0" oninput="updateALU()">
-      <div class="control-label" style="margin-top:12px"><span class="name">العدد B (4 بت)</span><span class="val" id="alu-b-label">0000</span></div>
-      <input type="range" id="alu-b" min="0" max="15" value="0" oninput="updateALU()">
+      <div class="control-label"><span class="name">العدد A</span><span class="val" id="la">0000 (0)</span></div>
+      <input type="range" id="ia" min="0" max="15" value="0" oninput="updALU()">
+      <div class="control-label" style="margin-top:12px"><span class="name">العدد B</span><span class="val" id="lb">0000 (0)</span></div>
+      <input type="range" id="ib2" min="0" max="15" value="0" oninput="updALU()">
       <div style="margin-top:16px;text-align:center">
         <div style="font-size:12px;color:#94a3b8;margin-bottom:6px">A + B</div>
-        <div class="output-badge on" id="alu-sum" style="font-size:20px">0</div>
+        <div class="output-badge on" id="sum" style="font-size:20px">0</div>
       </div>
     </div>
   </section>
-
 </main>
 
 <script>
-// ===================== STATE =====================
-var state = {
-  transistorType: 'NMOS',
-  gateMode: 'analog',
-  vin: 3.5,
-  binaryIn: 1,
-  ib: 120,
-  beta: 150,
-  vsupply: 5.0,
-  rload: 250,
-  vth: 1.2,
-  currentGate: 'NAND',
-  inputA: 0,
-  inputB: 0
-};
+var S={type:'NMOS',mode:'analog',vin:3.5,bin:1,ib:120,beta:150,vdd:5,rl:250,vth:1.2,gate:'NAND',a:0,b:0};
 
-// ===================== TABS =====================
-function switchTab(name) {
-  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
-  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
-  var sec = document.getElementById('tab-' + name);
-  if (sec) sec.classList.add('active');
-  var btn = document.querySelector('.tab-btn[data-tab="' + name + '"]');
-  if (btn) btn.classList.add('active');
+function switchTab(n){
+  var ss=document.querySelectorAll('.section');
+  for(var i=0;i<ss.length;i++) ss[i].classList.remove('active');
+  document.getElementById('tab-'+n).classList.add('active');
+  var bs=document.querySelectorAll('.tab-btn');
+  for(var i=0;i<bs.length;i++) bs[i].classList.toggle('active',bs[i].getAttribute('data-tab')===n);
 }
 
-// ===================== TRANSISTOR =====================
-function setTransistorType(type) {
-  state.transistorType = type;
-  document.querySelectorAll('.type-btn').forEach(function(b){
-    b.classList.toggle('active', b.dataset.type === type);
-  });
-  var isBJT = (type === 'NPN' || type === 'PNP');
-  document.getElementById('bjt-current-group').style.display = isBJT ? 'block' : 'none';
-  document.getElementById('bjt-gain-group').style.display = isBJT ? 'block' : 'none';
-  document.getElementById('vth-group').style.display = isBJT ? 'none' : 'block';
-  calculate();
+function setType(t){
+  S.type=t;
+  var bs=document.querySelectorAll('.type-btn');
+  for(var i=0;i<bs.length;i++) bs[i].classList.toggle('active',bs[i].getAttribute('data-type')===t);
+  var b=(t==='NPN'||t==='PNP');
+  document.getElementById('ib-g').style.display=b?'block':'none';
+  document.getElementById('beta-g').style.display=b?'block':'none';
+  document.getElementById('vth-g').style.display=b?'none':'block';
+  calc();
 }
 
-function setGateMode(mode) {
-  state.gateMode = mode;
-  document.getElementById('mode-analog').classList.toggle('active', mode === 'analog');
-  document.getElementById('mode-binary').classList.toggle('active', mode === 'binary');
-  document.getElementById('analog-controls').style.display = mode === 'analog' ? 'block' : 'none';
-  document.getElementById('binary-controls').style.display = mode === 'binary' ? 'block' : 'none';
-  calculate();
+function setMode(m){
+  S.mode=m;
+  document.getElementById('m-a').classList.toggle('active',m==='analog');
+  document.getElementById('m-b').classList.toggle('active',m==='binary');
+  document.getElementById('an-ctl').style.display=m==='analog'?'block':'none';
+  document.getElementById('bin-ctl').style.display=m==='binary'?'block':'none';
+  calc();
 }
 
-function setGateBinary(v) {
-  state.binaryIn = v;
-  state.vin = v * 5;
-  document.getElementById('btn-bin-0').classList.toggle('active', v === 0);
-  document.getElementById('btn-bin-1').classList.toggle('active', v === 1);
-  document.getElementById('binary-val-label').textContent = v === 1 ? '1 (HIGH)' : '0 (LOW)';
-  calculate();
+function setBin(v){
+  S.bin=v;S.vin=v*5;
+  document.getElementById('bb0').classList.toggle('active',v===0);
+  document.getElementById('bb1').classList.toggle('active',v===1);
+  document.getElementById('b-val').textContent=v===1?'1 (HIGH)':'0 (LOW)';
+  calc();
 }
 
-function onVinChange(v) {
-  state.vin = parseFloat(v);
-  document.getElementById('label-vin').textContent = state.vin.toFixed(2) + ' V';
-  calculate();
+function onVin(v){S.vin=parseFloat(v);document.getElementById('l-vin').textContent=S.vin.toFixed(2)+' V';calc();}
+function onIb(v){S.ib=parseFloat(v);document.getElementById('l-ib').textContent=S.ib+' μA';calc();}
+function onBeta(v){S.beta=parseFloat(v);document.getElementById('l-beta').textContent=S.beta;calc();}
+function onVdd(v){S.vdd=parseFloat(v);document.getElementById('l-vdd').textContent=S.vdd.toFixed(1)+' V';calc();}
+function onRl(v){S.rl=parseFloat(v);document.getElementById('l-rl').textContent=S.rl+' Ω';calc();}
+function onVth(v){S.vth=parseFloat(v);document.getElementById('l-vth').textContent=S.vth.toFixed(2)+' V';calc();}
+
+function preset(p){
+  if(p==='cutoff'){S.vin=0;S.bin=0;}
+  else if(p==='sat'){S.vin=5;S.bin=1;}
+  else if(p==='active'){S.vin=2.5;}
+  else{S.vin=S.vth+0.05;}
+  document.getElementById('s-vin').value=S.vin;
+  document.getElementById('l-vin').textContent=S.vin.toFixed(2)+' V';
+  document.getElementById('b-val').textContent=S.bin===1?'1 (HIGH)':'0 (LOW)';
+  document.getElementById('bb0').classList.toggle('active',S.bin===0);
+  document.getElementById('bb1').classList.toggle('active',S.bin===1);
+  calc();
 }
 
-function onIbChange(v) {
-  state.ib = parseFloat(v);
-  document.getElementById('label-ib').textContent = state.ib.toFixed(0) + ' μA';
-  calculate();
-}
-
-function onBetaChange(v) {
-  state.beta = parseFloat(v);
-  document.getElementById('label-beta').textContent = state.beta.toFixed(0);
-  calculate();
-}
-
-function onVSupplyChange(v) {
-  state.vsupply = parseFloat(v);
-  document.getElementById('label-vsupply').textContent = state.vsupply.toFixed(1) + ' V';
-  calculate();
-}
-
-function onRLoadChange(v) {
-  state.rload = parseFloat(v);
-  document.getElementById('label-rload').textContent = state.rload.toFixed(0) + ' Ω';
-  calculate();
-}
-
-function onVthChange(v) {
-  state.vth = parseFloat(v);
-  document.getElementById('label-vth').textContent = state.vth.toFixed(2) + ' V';
-  calculate();
-}
-
-function applyPreset(name) {
-  if (name === 'cutoff') {
-    state.vin = 0; state.binaryIn = 0;
-  } else if (name === 'saturation') {
-    state.vin = 5; state.binaryIn = 1;
-  } else if (name === 'active') {
-    state.vin = 2.5;
-  } else if (name === 'threshold') {
-    state.vin = state.vth + 0.05;
-  }
-  document.getElementById('slider-vin').value = state.vin;
-  document.getElementById('label-vin').textContent = state.vin.toFixed(2) + ' V';
-  document.getElementById('binary-val-label').textContent = state.binaryIn === 1 ? '1 (HIGH)' : '0 (LOW)';
-  document.getElementById('btn-bin-0').classList.toggle('active', state.binaryIn === 0);
-  document.getElementById('btn-bin-1').classList.toggle('active', state.binaryIn === 1);
-  calculate();
-}
-
-function calculate() {
-  var type = state.transistorType;
-  var vdd = state.vsupply;
-  var rl = state.rload;
-  var id = 0, vout = vdd;
-  var isBJT = (type === 'NPN' || type === 'PNP');
-  var isPMOS = (type === 'PMOS' || type === 'PNP');
-
-  if (isBJT) {
-    var ib = state.ib / 1000000;
-    var ic = ib * state.beta;
-    var vce = vdd - ic * rl;
-    if (vce < 0.2) { vce = 0.2; ic = (vdd - 0.2) / rl; }
-    id = ic;
-    vout = isPMOS ? (vdd - vce) : vce;
+function calc(){
+  var id=0,vout=S.vdd,isBJT=(S.type==='NPN'||S.type==='PNP'),isPMOS=(S.type==='PMOS'||S.type==='PNP');
+  if(isBJT){
+    var ib=S.ib/1e6,ic=ib*S.beta,vce=S.vdd-ic*S.rl;
+    if(vce<0.2){vce=0.2;ic=(S.vdd-0.2)/S.rl;}
+    id=ic;vout=isPMOS?(S.vdd-vce):vce;
   } else {
-    var vgs = isPMOS ? (vdd - state.vin) : state.vin;
-    if (vgs > state.vth) {
-      var k = 0.002;
-      var id_sat = 0.5 * k * Math.pow(vgs - state.vth, 2);
-      var id_lin = k * ((vgs - state.vth) * (vdd) - 0.5 * vdd * vdd);
-      if (vdd - id_sat * rl < vgs - state.vth) {
-        id = (vgs - state.vth) / rl;
-      } else {
-        id = id_sat;
-      }
-      vout = vdd - id * rl;
-      if (vout < 0) vout = 0;
+    var vgs=isPMOS?(S.vdd-S.vin):S.vin;
+    if(vgs>S.vth){
+      var k=0.002,idSat=0.5*k*Math.pow(vgs-S.vth,2);
+      if(S.vdd-idSat*S.rl<vgs-S.vth) id=(vgs-S.vth)/S.rl;
+      else id=idSat;
+      vout=S.vdd-id*S.rl;
+      if(vout<0)vout=0;
     }
   }
-
-  var power = id * vout;
-  var region = 'قطع';
-  var regionColor = '#fb7185';
-  if (id > 0.0001) {
-    if (vout < 0.5) { region = 'تشبع'; regionColor = '#34d399'; }
-    else { region = 'نشط'; regionColor = '#22d3ee'; }
-  }
-
-  document.getElementById('stat-current').textContent = (id * 1000).toFixed(2) + ' mA';
-  document.getElementById('stat-vout').textContent = vout.toFixed(2) + ' V';
-  document.getElementById('stat-power').textContent = (power * 1000).toFixed(1) + ' mW';
-  document.getElementById('stat-state').textContent = id > 0.0001 ? 'مغلق (ON)' : 'مفتوح (OFF)';
-
-  var badge = document.getElementById('region-badge');
-  badge.textContent = 'منطقة ' + region;
-  badge.style.color = regionColor;
-  badge.style.borderColor = regionColor + '55';
-  badge.style.background = regionColor + '15';
-
-  drawSchematic();
+  var pw=id*vout,reg='قطع',col='#fb7185';
+  if(id>0.0001){if(vout<0.5){reg='تشبع';col='#34d399';}else{reg='نشط';col='#22d3ee';}}
+  document.getElementById('st-cur').textContent=(id*1000).toFixed(2)+' mA';
+  document.getElementById('st-vout').textContent=vout.toFixed(2)+' V';
+  document.getElementById('st-pw').textContent=(pw*1000).toFixed(1)+' mW';
+  document.getElementById('st-state').textContent=id>0.0001?'مغلق':'مفتوح';
+  var b=document.getElementById('region-badge');
+  b.textContent='منطقة '+reg;b.style.color=col;b.style.borderColor=col+'55';b.style.background=col+'15';
+  drawSVG(vout);
 }
 
-function drawSchematic() {
-  var svg = document.getElementById('schematic-svg');
-  var vout = parseFloat(document.getElementById('stat-vout').textContent) || 0;
-  var on = vout < 2.5;
-  var color = on ? '#34d399' : '#64748b';
-  svg.innerHTML = 
-    '<line x1="50" y1="50" x2="50" y2="250" stroke="#475569" stroke
+function drawSVG(vout){
+  var on=vout<2.5,col=on?'#34d399':'#64748b',s='';
+  s+='<line x1="50" y1="50" x2="50" y2="250" stroke="#475569" stroke-width="2"/>';
+  s+='<line x1="50" y1="50" x2="350" y2="50" stroke="#475569" stroke-width="2"/>';
+  s+='<text x="30" y="45" fill="#94a3b8" font-size="11">V_DD</text>';
+  s+='<rect x="180" y="80" width="80" height="60" fill="none" stroke="'+col+'" stroke-width="2" rx="6"/>';
+  s+='<text x="220" y="115" fill="'+col+'" font-size="12" text-anchor="middle" font-weight="bold">'+S.type+'</text>';
+  s+='<line x1="220" y1="50" x2="220" y2="80" stroke="'+col+'" stroke-width="2"/>';
+  s+='<line x1="220" y1="140" x2="220" y2="180" stroke="'+col+'" stroke-width="2"/>';
+  s+='<rect x="180" y="180" width="80" height="30" fill="none" stroke="#475569" stroke-width="2" rx="4"/>';
+  s+='<text x="220" y="200" fill="#94a3b8" font-size="11" text-anchor="middle">R_L</text>';
+  s+='<line x1="220" y1="210" x2="220" y2="250" stroke="#475569" stroke-width="2"/>';
+  s+='<line x1="50" y1="250" x2="350" y2="250" stroke="#475569" stroke-width="2"/>';
+  s+='<text x="330" y="270" fill="#94a3b8" font-size="11">GND</text>';
+  s+='<line x1="120" y1="110" x2="180" y2="110" stroke="#22d3ee" stroke-width="2"/>';
+  s+='<text x="90" y="105" fill="#22d3ee" font-size="11">V_in</text>';
+  s+='<text x="220" y="245" fill="'+col+'" font-size="11" text-anchor="middle">V_out='+vout.toFixed(2)+'V</text>';
+  document.getElementById('svg1').innerHTML=s;
+}
+
+function resetSim(){
+  S.vin=3.5;S.bin=1;S.ib=120;S.beta=150;S.vdd=5;S.rl=250;S.vth=1.2;
+  document.getElementById('s-vin').value=3.5;document.getElementById('l-vin').textContent='3.50 V';
+  document.getElementById('s-ib').value=120;document.getElementById('l-ib').textContent='120 μA';
+  document.getElementById('s-beta').value=150;document.getElementById('l-beta').textContent='150';
+  document.getElementById('s-vdd').value=5;document.getElementById('l-vdd').textContent='5.0 V';
+  document.getElementById('s-rl').value=250;document.getElementById('l-rl').textContent='250 Ω';
+  document.getElementById('s-vth').value=1.2;document.getElementById('l-vth').textContent='1.20 V';
+  calc();
+}
+
+var gates=[
+  {n:'NOT',i:1,f:function(a){return a?0:1;},fo:'Y = Ā'},
+  {n:'AND',i:2,f:function(a,b){return a&&b?1:0;},fo:'Y = A·B'},
+  {n:'OR',i:2,f:function(a,b){return a||b?1:0;},fo:'Y = A+B'},
+  {n:'NAND',i:2,f:function(a,b){return !(a&&b)?1:0;},fo:'Y = (A·B)‾'},
+  {n:'NOR',i:2,f:function(a,b){return !(a||b)?1:0;},fo:'Y = (A+B)‾'},
+  {n:'XOR',i:2,f:function(a,b){return a!==b?1:0;},fo:'Y = A⊕B'},
+  {n:'XNOR',i:2,f:function(a,b){return a===b?1:0;},fo:'Y = (A⊕B)‾'}
+];
+
+function buildChart(){
+  var h='';
+  for(var i=0;i<gates.length;i++){
+    var g=gates[i];
+    h+='<div class="gate-card"><h3>'+g.n+' — '+g.fo+'</h3><table><tr><th>A</th>'+(g.i===2?'<th>B</th>':'')+'<th>Y</th></tr>';
+    if(g.i===1){
+      h+='<tr><td>0</td><td>'+g.f(0)+'</td></tr><tr><td>1</td><td>'+g.f(1)+'</td></tr>';
+    }else{
+      h+='<tr><td>0</td><td>0</td><td>'+g.f(0,0)+'</td></tr>';
+      h+='<tr><td>0</td><td>1</td><td>'+g.f(0,1)+'</td></tr>';
+      h+='<tr><td>1</td><td>0</td><td>'+g.f(1,0)+'</td></tr>';
+      h+='<tr><td>1</td><td>1</td><td>'+g.f(1,1)+'</td></tr>';
+    }
+    h+='</table></div>';
+  }
+  document.getElementById('gates-grid').innerHTML=h;
+}
+
+var gFns={
+  NOT:function(a){return a?0:1;},
+  AND:function(a,b){return a&&b?1:0;},
+  NAND:function(a,b){return !(a&&b)?1:0;},
+  OR:function(a,b){return a||b?1:0;},
+  NOR:function(a,b){return !(a||b)?1:0;},
+  XOR:function(a,b){return a!==b?1:0;},
+  XNOR:function(a,b){return a===b?1:0;}
+};
+
+function buildTabs(){
+  var names=['NOT','AND','NAND','OR','NOR','XOR','XNOR'],h='';
+  for(var i=0;i<names.length;i++){
+    h+='<button class="igate-btn'+(names[i]===S.gate?' active':'')+'" onclick="selGate(\''+names[i]+'\')">'+names[i]+'</button>';
+  }
+  document.getElementById('gtabs').innerHTML=h;
+}
+
+function selGate(g){
+  S.gate=g;
+  buildTabs();
+  document.getElementById('gtitle').textContent=g+' Gate';
+  var isNOT=(g==='NOT'),h='';
+  h+='<button class="igate-input'+(S.a?' on':'')+'" onclick="tog(\'A\')">A = '+S.a+'</button>';
+  if(!isNOT) h+='<button class="igate-input'+(S.b?' on':'')+'" onclick="tog(\'B\')">B = '+S.b+'</button>';
+  document.getElementById('gin').innerHTML=h;
+  var y=isNOT?gFns[g](S.a):gFns[g](S.a,S.b);
+  var o=document.getElementById('outY');
+  o.textContent='Y = '+y;
+  o.classList.toggle('on',y===1);
+}
+
+function tog(x){
+  if(x==='A')S.a=S.a?0:1;else S.b=S.b?0:1;
+  selGate(S.gate);
+}
+
+function updALU(){
+  var a=parseInt(document.getElementById('ia').value);
+  var b=parseInt(document.getElementById('ib2').value);
+  var s=a+b;
+  document.getElementById('la').textContent=('0000'+a.toString(2)).slice(-4)+' ('+a+')';
+  document.getElementById('lb').textContent=('0000'+b.toString(2)).slice(-4)+' ('+b+')';
+  document.getElementById('sum').textContent=s+' ('+('0000'+s.toString(2)).slice(-5)+')';
+}
+
+buildChart();
+buildTabs();
+selGate('NAND');
+calc();
+</script>
+</body>
+</html>
