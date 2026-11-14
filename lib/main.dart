@@ -34,43 +34,25 @@ class WebScreen extends StatefulWidget {
 }
 
 class _WebScreenState extends State<WebScreen> {
-  WebViewController? _controller;
+  late final WebViewController _controller;
   bool _loading = true;
-  String _error = '';
 
   @override
   void initState() {
     super.initState();
-    _init();
-  }
-
-  Future<void> _init() async {
-    try {
-      final html = await rootBundle.loadString('assets/index.html');
-      final c = WebViewController()
-        ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setBackgroundColor(const Color(0xFF050810))
-        ..setNavigationDelegate(NavigationDelegate(
-          onPageFinished: (_) {
-            if (mounted) setState(() => _loading = false);
-          },
-          onWebResourceError: (e) {
-            debugPrint('WebView error: ${e.description}');
-          },
-        ));
-      await c.loadHtmlString(html, baseUrl: 'https://localhost/');
-      if (!mounted) return;
-      setState(() {
-        _controller = c;
-        _loading = false;
-      });
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _error = 'خطأ في تحميل الملف: $e';
-        _loading = false;
-      });
-    }
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0xFF050810))
+      ..setNavigationDelegate(NavigationDelegate(
+        onPageFinished: (_) {
+          if (mounted) setState(() => _loading = false);
+        },
+        onWebResourceError: (e) {
+          debugPrint('WebView error: ${e.description}');
+        },
+      ))
+      // هذا هو السطر السحري الذي سيحل المشكلة
+      ..loadFlutterAsset('assets/index.html');
   }
 
   @override
@@ -82,25 +64,7 @@ class _WebScreenState extends State<WebScreen> {
             ? const Center(
                 child: CircularProgressIndicator(color: Color(0xFF06B6D4)),
               )
-            : _error.isNotEmpty
-                ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Text(
-                        _error,
-                        style: const TextStyle(color: Colors.red, fontSize: 14),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  )
-                : _controller != null
-                    ? WebViewWidget(controller: _controller!)
-                    : const Center(
-                        child: Text(
-                          'لا يوجد محتوى',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
+            : WebViewWidget(controller: _controller),
       ),
     );
   }
