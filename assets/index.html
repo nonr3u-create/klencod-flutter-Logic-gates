@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>محاكي الترانزستور وبواباته المنطقية | TransistorLab</title>
+
+  <!-- Tailwind CSS محلي (بدون إنترنت) -->
+  <script>
+    /* ===== Tailwind Micro-Build (Dark Mode, RTL) ===== */
+    (function () {
+      const style = document.createElement('style');
+      style.textContent = `
+        *,*::before,*::after{box-sizing:border-box;border-width:0;border-style:solid;border-color:#1e293b}
+        html{line-height:1.5;-webkit-text-size-adjust:100%;font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans Arabic',sans-serif}
+        body{margin:0;line-height:inherit}
+        button{font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0;background:transparent;border:0;cursor:pointer}
+        input{font-family:inherit;font-size:100%;line-height:inherit;color:inherit;margin:0;padding:0}
+        h1,h2,h3,p{margin:0}
+        svg{display:block;vertical-align:middle}
+        .bg-slate-950{background-color:#020617}
+        .bg-slate-900{background-color:#0f172a}
+        .bg-slate-900\/90{background-color:rgba(15,23,42,.9)}
+        .bg-slate-800{background-color:#1e293b}
+        .bg-slate-800\/80{background-color:rgba(30,41,59,.8)}
+        .bg-slate-800\/60{background-color:rgba(30,41,59,.6)}
+        .bg-slate-700{background-color:#334155}
+        .bg-cyan-500{background-color:#06b6d4}
+        .bg-emerald-500\/10{background-color:rgba(16,185,129,.1)}
+        .bg-rose-500\/10{background-color:rgba(244,63,94,.1)}
+        .bg-cyan-500\/5{background-color:rgba(6,182,212,.05)}
+        .bg-slate-800\/60{background-color:rgba(30,41,59,.6)}
+        .text-white{color:#fff}
+        .text-slate-100{color:#f1f5f9}
+        .text-slate-200{color:#e2e8f0}
+        .text-slate-300{color:#cbd5e1}
+        .text-slate-400{color:#94a3b8}
+        .text-cyan-400{color:#22d3ee}
+        .text-cyan-500{color:#06b6d4}
+        .text-emerald-400{color:#34d399}
+        .text-rose-400{color:#fb7185}
+        .text-amber-500{color:#f59e0b}
+        .border{border-width:1px}
+        .border-b{border-bottom-width:1px}
+        .border-t{border-top-width:1px}
+        .border-slate-800{border-color:#1e293b}
+        .border-slate-700{border-color:#334155}
+        .border-rose-500\/30{border-color:rgba(244,63,94,.3)}
+        .border-cyan-500\/20{border-color:rgba(6,182,212,.2)}
+        .border-emerald-500\/40{border-color:rgba(16,185,129,.4)}
+        .rounded{border-radius:.25rem}
+        .rounded-md{border-radius:.375rem}
+        .rounded-lg{border-radius:.5rem}
+        .rounded-xl{border-radius:.75rem}
+        .rounded-full{border-radius:9999px}
+        .flex{display:flex}
+        .inline-flex{display:inline-flex}
+        .grid{display:grid}
+        .hidden{display:none}
+        .flex-col{flex-direction:column}
+        .flex-wrap{flex-wrap:wrap}
+        .items-center{align-items:center}
+        .items-start{align-items:flex-start}
+        .justify-between{justify-content:space-between}
+        .justify-center{justify-content:center}
+        .justify-around{justify-content:space-around}
+        .gap-1{gap:.25rem}
+        .gap-1\.5{gap:.375rem}
+        .gap-2{gap:.5rem}
+        .gap-3{gap:.75rem}
+        .gap-4{gap:1rem}
+        .gap-5{gap:1.25rem}
+        .gap-6{gap:1.5rem}
+        .p-1{padding:.25rem}
+        .p-1\.5{padding:.375rem}
+        .p-2{padding:.5rem}
+        .p-2\.5{padding:.625rem}
+        .p-3{padding:.75rem}
+        .p-4{padding:1rem}
+        .p-5{padding:1.25rem}
+        .px-2{padding-left:.5rem;padding-right:.5rem}
+        .px-2\.5{padding-left:.625rem;padding-right:.625rem}
+        .px-3{padding-left:.75rem;padding-right:.75rem}
+        .px-3\.5{padding-left:.875rem;padding-right:.875rem}
+        .px-4{padding-left:1rem;padding-right:1rem}
+        .py-0\.5{padding-top:.125rem;padding-bottom:.125rem}
+        .py-1{padding-top:.25rem;padding-bottom:.25rem}
+        .py-1\.5{padding-top:.375rem;padding-bottom:.375rem}
+        .py-2{padding-top:.5rem;padding-bottom:.5rem}
+        .py-3{padding-top:.75rem;padding-bottom:.75rem}
+        .py-6{padding-top:1.5rem;padding-bottom:1.5rem}
+        .pt-1{padding-top:.25rem}
+        .pt-2{padding-top:.5rem}
+        .pt-3{padding-top:.75rem}
+        .pb-3{padding-bottom:.75rem}
+        .mt-1{margin-top:.25rem}
+        .mt-4{margin-top:1rem}
+        .w-2\.5{width:.625rem}
+        .w-9{width:2.25rem}
+        .w-full{width:100%}
+        .h-2{height:.5rem}
+        .h-2\.5{height:.625rem}
+        .h-9{height:2.25rem}
+        .h-16{height:4rem}
+        .h-auto{height:auto}
+        .min-h-\[380px\]{min-height:380px}
+        .min-h-screen{min-height:100vh}
+        .max-w-7xl{max-width:80rem}
+        .max-w-\[500px\]{max-width:500px}
+        .mx-auto{margin-left:auto;margin-right:auto}
+        .shrink-0{flex-shrink:0}
+        .flex-1{flex:1 1 0%}
+        .overflow-x-auto{overflow-x:auto}
+        .overflow-hidden{overflow:hidden}
+        .relative{position:relative}
+        .sticky{position:sticky}
+        .top-0{top:0}
+        .z-50{z-index:50}
+        .backdrop-blur-md{backdrop-filter:blur(12px)}
+        .text-xs{font-size:.75rem;line-height:1rem}
+        .text-sm{font-size:.875rem;line-height:1.25rem}
+        .text-base{font-size:1rem;line-height:1.5rem}
+        .text-lg{font-size:1.125rem;line-height:1.75rem}
+        .text-xl{font-size:1.25rem;line-height:1.75rem}
+        .text-\[10px\]{font-size:10px}
+        .text-\[11px\]{font-size:11px}
+        .font-bold{font-weight:700}
+        .font-semibold{font-weight:600}
+        .font-mono{font-family:'JetBrains Mono','Courier New',monospace}
+        .font-sans{font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans Arabic',sans-serif}
+        .text-center{text-align:center}
+        .tabular-nums{font-variant-numeric:tabular-nums}
+        .tracking-tight{letter-spacing:-.025em}
+        .leading-relaxed{line-height:1.625}
+        .select-none{user-select:none}
+        .cursor-pointer{cursor:pointer}
+        .transition-all{transition-property:all;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}
+        .transition-colors{transition-property:background-color,border-color,color,fill,stroke;transition-duration:.15s}
+        .duration-200{transition-duration:.2s}
+        .shadow-xs{box-shadow:0 1px 2px 0 rgba(0,0,0,.05)}
+        .shadow-sm{box-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1)}
+        .animate-pulse{animation:pulse 2s cubic-bezier(.4,0,.6,1) infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+        .accent-cyan-500{accent-color:#06b6d4}
+        .accent-emerald-500{accent-color:#10b981}
+        .accent-amber-500{accent-color:#f59e0b}
+        .bg-gradient-to-tr{background-image:linear-gradient(to top right,var(--tw-gradient-from),var(--tw-gradient-to))}
+        .from-cyan-600{--tw-gradient-from:#0891b2;--tw-gradient-to:rgba(8,145,178,0)}
+        .to-emerald-500{--tw-gradient-to:#10b981}
+        .text-\[11px\]{font-size:11px}
+        @media (min-width:640px){
+          .sm\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+          .sm\:flex-row{flex-direction:row}
+          .sm\:items-center{align-items:center}
+          .sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}
+        }
+        @media (min-width:768px){
+          .md\:flex{display:flex}
+          .md\:hidden{display:none}
+          .md\:flex-row{flex-direction:row}
+          .md\:items-center{align-items:center}
+          .md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+        }
+        @media (min-width:1024px){
+          .lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+          .lg\:grid-cols-12{grid-template-columns:repeat(12,minmax(0,1fr))}
+          .lg\:col-span-8{grid-column:span 8/span 8}
+          .lg\:col-span-4{grid-column:span 4/span 4}
+          .lg\:px-8{padding-left:2rem;padding-right:2rem}
+        }
+        .grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}
+        .grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+        input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer}
+        input[type=range]::-webkit-slider-runnable-track{height:.5rem;background:#334155;border-radius:.5rem}
+        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;height:1.1rem;width:1.1rem;border-radius:9999px;background:#06b6d4;margin-top:-.3rem;border:2px solid #0f172a}
+        @keyframes wireFlow{from{stroke-dashoffset:24}to{stroke-dashoffset:0}}
+        .animate-wire-flow{stroke-dasharray:6 6;animation:wireFlow 1s linear infinite}
+      `;
+      document.head.appendChild(style);
+    })();
+  </script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200">
+
+  <!-- Header Navbar -->
+  <header class="sticky top-0 z-50 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-600 to-emerald-500 flex items-center justify-center text-white shadow-sm font-bold text-lg">⚡</div>
+        <div>
+          <h1 class="text-base font-bold text-white tracking-tight">محاكي الترانزستور وبواباته المنطقية</h1>
+          <p class="text-[11px] text-slate-400">TransistorLab • يعمل بدون إنترنت</p>
+        </div>
+      </div>
+      <nav class="hidden md:flex items-center gap-1.5 p-1 bg-slate-800/80 rounded-xl">
+        <button onclick="switchTab('simulator')" id="nav-simulator" class="tab-btn px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all bg-cyan-500 text-white shadow-xs">محاكي الترانزستور</button>
+        <button onclick="switchTab('chart')" id="nav-chart" class="tab-btn px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white">لوحة البوابات</button>
+        <button onclick="switchTab('gates')" id="nav-gates" class="tab-btn px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white">بوابات CMOS</button>
+        <button onclick="switchTab('cascaded')" id="nav-cascaded" class="tab-btn px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-white">الدوائر المدمجة</button>
+      </nav>
+      <div class="flex items-center gap-2">
+        <button onclick="resetSimulation()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-colors">إعادة الضبط</button>
+      </div>
+    </div>
+    <div class="md:hidden border-t border-slate-800 px-3 py-2 flex items-center justify-around overflow-x-auto gap-1">
+      <button onclick="switchTab('simulator')" id="mob-simulator" class="px-2.5 py-1 text-xs font-bold rounded bg-cyan-500 text-white whitespace-nowrap">الترانزستور</button>
+      <button onclick="switchTab('chart')" id="mob-chart" class="px-2.5 py-1 text-xs font-bold rounded text-slate-400 whitespace-nowrap">جدول البوابات</button>
+      <button onclick="switchTab('gates')" id="mob-gates" class="px-2.5 py-1 text-xs font-bold rounded text-slate-400 whitespace-nowrap">البوابات</button>
+      <button onclick="switchTab('cascaded')" id="mob-cascaded" class="px-2.5 py-1 text-xs font-bold rounded text-slate-400 whitespace-nowrap">الدوائر</button>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- TAB 1 -->
+    <section id="tab-simulator-content" class="space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xs">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse"></span>
+              <h2 class="text-lg font-bold text-white">واجهة محاكاة الترانزستور التفاعلية</h2>
+            </div>
+            <p class="mt-1 text-xs text-slate-400">اختر نوع الترانزستور، وتحكم في الجهد والتيار والمقاومة، وراقب القياسات اللحظية.</p>
+          </div>
+          <div class="flex items-center gap-1.5 p-1 bg-slate-800 rounded-xl shrink-0">
+            <button onclick="setTransistorType('NMOS')" id="type-NMOS" class="type-btn px-3.5 py-1.5 text-xs font-bold rounded-lg bg-cyan-500 text-white">NMOS</button>
+            <button onclick="setTransistorType('PMOS')" id="type-PMOS" class="type-btn px-3.5 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white">PMOS</button>
+            <button onclick="setTransistorType('NPN')" id="type-NPN" class="type-btn px-3.5 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white">NPN</button>
+            <button onclick="setTransistorType('PNP')" id="type-PNP" class="type-btn px-3.5 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white">PNP</button>
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <span class="font-semibold text-slate-400">حالات سريعة:</span>
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button onclick="applyPreset('cutoff')" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300">قطع (0)</button>
+            <button onclick="applyPreset('saturation')" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300">تشبع (1)</button>
+            <button onclick="applyPreset('active')" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300">مضخم</button>
+            <button onclick="applyPreset('threshold')" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300">عتبة</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xs space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-1 p-1 bg-slate-800 rounded-lg">
+              <button onclick="setViewMode('schematic')" id="view-schematic" class="view-btn px-3 py-1 text-xs font-bold rounded-md bg-slate-700 text-cyan-400">المخطط</button>
+              <button onclick="setViewMode('iv_curve')" id="view-iv_curve" class="view-btn px-3 py-1 text-xs font-bold rounded-md text-slate-400 hover:text-white">منحنى I-V</button>
+            </div>
+            <span id="region-badge" class="font-mono text-xs font-bold px-2.5 py-1 rounded-md border bg-rose-500/10 text-rose-400 border-rose-500/30">منطقة القطع</span>
+          </div>
+          <div class="w-full bg-slate-950 rounded-xl p-4 flex items-center justify-center min-h-[380px] border border-slate-800 relative overflow-hidden">
+            <div id="canvas-schematic" class="w-full flex justify-center">
+              <svg id="schematic-svg" viewBox="0 0 540 340" class="w-full max-w-[500px] h-auto select-none"></svg>
+            </div>
+            <div id="canvas-iv_curve" class="w-full hidden justify-center">
+              <svg id="iv-curve-svg" viewBox="0 0 540 320" class="w-full max-w-[500px] h-auto select-none"></svg>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+            <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-800">
+              <div class="text-[11px] text-slate-400">تيار الحمل</div>
+              <div id="stat-current" class="text-lg font-mono font-bold text-emerald-400 tabular-nums">0.00 mA</div>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-800">
+              <div class="text-[11px] text-slate-400">جهد الخرج</div>
+              <div id="stat-vout" class="text-lg font-mono font-bold text-cyan-400 tabular-nums">5.00 V</div>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-800">
+              <div class="text-[11px] text-slate-400">استهلاك الطاقة</div>
+              <div id="stat-power" class="text-lg font-mono font-bold text-amber-500 tabular-nums">0.0 mW</div>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-800">
+              <div class="text-[11px] text-slate-400">حالة المفتاح</div>
+              <div id="stat-state" class="text-xs font-bold text-slate-200 mt-1">مفتوح</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-4 space-y-4">
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xs space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-white">عناصر التحكم</h3>
+              <span id="device-family-badge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">MOSFET</span>
+            </div>
+            <div id="bjt-drive-mode-container" class="space-y-2 p-2.5 rounded-lg bg-cyan-500/5 border border-cyan-500/20 hidden">
+              <div class="text-[11px] font-bold text-cyan-400">طريقة التحكم:</div>
+              <div class="flex items-center gap-1 p-0.5 bg-slate-800 rounded-md">
+                <button onclick="setBjtDriveMode('voltage')" id="bjt-mode-v" class="flex-1 py-1 text-xs font-bold rounded bg-slate-700 text-white">جهد (V_B)</button>
+                <button onclick="setBjtDriveMode('current')" id="bjt-mode-i" class="flex-1 py-1 text-xs font-bold rounded text-slate-400 hover:text-white">تيار (I_B)</button>
+              </div>
+            </div>
+            <div id="voltage-drive-controls">
+              <div class="flex items-center gap-1 p-1 bg-slate-800 rounded-lg mb-3">
+                <button onclick="setGateMode('analog')" id="mode-analog" class="flex-1 py-1 text-xs font-bold rounded-md bg-slate-700 text-white">تماثلي</button>
+                <button onclick="setGateMode('binary')" id="mode-binary" class="flex-1 py-1 text-xs font-bold rounded-md text-slate-400 hover:text-white">رقمي</button>
+              </div>
+              <div id="control-analog-voltage" class="space-y-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-semibold text-slate-300">جهد الدخل:</span>
+                  <span id="label-vin" class="font-mono font-bold text-cyan-400">3.50 V</span>
+                </div>
+                <input type="range" id="slider-vin" min="0" max="5" step="0.05" value="3.5" oninput="onVinChange(this.value)" class="w-full h-2" />
+                <div class="flex justify-between text-[10px] text-slate-400">
+                  <span>0.00 V</span>
+                  <span id="vth-indicator" class="text-amber-500 font-semibold">Vth = 1.2V</span>
+                  <span>5.0 V</span>
+                </div>
+              </div>
+              <div id="control-digital-binary" class="space-y-2 hidden">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                  <span>القيمة المنطقية:</span>
+                  <span id="binary-val-label" class="font-mono font-bold text-cyan-400">1 (HIGH)</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="setGateBinary(0)" id="btn-binary-0" class="py-2 px-3 rounded-lg text-xs font-bold border border-slate-800 text-slate-400">0 (LOW)</button>
+                  <button onclick="setGateBinary(1)" id="btn-binary-1" class="py-2 px-3 rounded-lg text-xs font-bold border bg-emerald-500/10 text-emerald-400 border-emerald-500/40">1 (HIGH)</button>
+                </div>
+              </div>
+            </div>
+            <div id="control-bjt-current" class="space-y-1.5 hidden">
+              <div class="flex items-center justify-between text-xs
