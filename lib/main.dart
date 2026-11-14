@@ -5,35 +5,35 @@ import 'package:webview_flutter/webview_flutter.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Color(0xFF020617),
+    statusBarColor: Color(0xFF050810),
     statusBarIconBrightness: Brightness.light,
   ));
-  runApp(const TransistorLabApp());
+  runApp(const LogicLabApp());
 }
 
-class TransistorLabApp extends StatelessWidget {
-  const TransistorLabApp({super.key});
+class LogicLabApp extends StatelessWidget {
+  const LogicLabApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'TransistorLab',
+      title: 'مختبر البوابات المنطقية',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF020617),
+        scaffoldBackgroundColor: const Color(0xFF050810),
       ),
-      home: const WebViewScreen(),
+      home: const WebScreen(),
     );
   }
 }
 
-class WebViewScreen extends StatefulWidget {
-  const WebViewScreen({super.key});
+class WebScreen extends StatefulWidget {
+  const WebScreen({super.key});
   @override
-  State<WebViewScreen> createState() => _WebViewScreenState();
+  State<WebScreen> createState() => _WebScreenState();
 }
 
-class _WebViewScreenState extends State<WebViewScreen> {
+class _WebScreenState extends State<WebScreen> {
   WebViewController? _controller;
   bool _loading = true;
   String _error = '';
@@ -49,16 +49,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
       final html = await rootBundle.loadString('assets/index.html');
       final c = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setBackgroundColor(const Color(0xFF020617))
+        ..setBackgroundColor(const Color(0xFF050810))
         ..setNavigationDelegate(NavigationDelegate(
           onPageFinished: (_) {
             if (mounted) setState(() => _loading = false);
           },
           onWebResourceError: (e) {
-            debugPrint('WV error: ${e.description}');
+            debugPrint('WebView error: ${e.description}');
           },
         ));
-      // تحميل HTML كسلسلة نصية - أكثر موثوقية من loadFlutterAsset
       await c.loadHtmlString(html, baseUrl: 'https://localhost/');
       if (!mounted) return;
       setState(() {
@@ -68,7 +67,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = 'خطأ: $e';
+        _error = 'خطأ في تحميل الملف: $e';
         _loading = false;
       });
     }
@@ -76,30 +75,32 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) async {
-        if (didPop) return;
-        if (_controller != null && await _controller!.canGoBack()) {
-          await _controller!.goBack();
-        } else if (mounted) {
-          Navigator.of(context).pop();
-        }
-      },
-      child: Scaffold(
-        backgroundColor: const Color(0xFF020617),
-        body: SafeArea(
-          child: _loading
-              ? const Center(child: CircularProgressIndicator(color: Color(0xFF06B6D4)))
-              : _error.isNotEmpty
-                  ? Center(child: Padding(
+    return Scaffold(
+      backgroundColor: const Color(0xFF050810),
+      body: SafeArea(
+        child: _loading
+            ? const Center(
+                child: CircularProgressIndicator(color: Color(0xFF06B6D4)),
+              )
+            : _error.isNotEmpty
+                ? Center(
+                    child: Padding(
                       padding: const EdgeInsets.all(20),
-                      child: Text(_error, style: const TextStyle(color: Colors.red)),
-                    ))
-                  : _controller != null
-                      ? WebViewWidget(controller: _controller!)
-                      : const Center(child: Text('لا يوجد محتوى', style: TextStyle(color: Colors.white))),
-        ),
+                      child: Text(
+                        _error,
+                        style: const TextStyle(color: Colors.red, fontSize: 14),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                : _controller != null
+                    ? WebViewWidget(controller: _controller!)
+                    : const Center(
+                        child: Text(
+                          'لا يوجد محتوى',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
       ),
     );
   }

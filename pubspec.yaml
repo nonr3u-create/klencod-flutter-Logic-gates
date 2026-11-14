@@ -1,5 +1,5 @@
 name: logic_gates
-description: TransistorLab - محاكي الترانزستور والبوابات المنطقية
+description: مختبر البوابات المنطقية والترانزستور
 publish_to: 'none'
 version: 1.0.0+1
 
