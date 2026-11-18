@@ -3,212 +3,305 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مختبر الترانزستور والبوابات المنطقية</title>
+<title>مختبر البوابات المنطقية الشامل</title>
 <style>
-  /* نظام الألوان والخطوط */
   :root {
-    --bg: #020617; --panel: #0f172a; --panel2: #1e293b; --border: #334155;
-    --text: #e2e8f0; --dim: #94a3b8; --cyan: #06b6d4; --green: #10b981;
-    --green-b: #2eff9a; --red: #ef4444; --amber: #f59e0b;
+    --bg: #050810; --panel: #0e1424; --panel2: #141b2e;
+    --border: #1e2a44; --text: #e2e8f0; --dim: #7a8ba0;
+    --cyan: #06b6d4; --green: #10b981; --green-b: #2eff9a;
+    --red: #ef4444; --amber: #f59e0b; --purple: #a855f7;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-  body { background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 40px; }
-  
-  /* الترويسة والتبويبات */
-  header { position: sticky; top: 0; z-index: 100; background: rgba(2,6,23,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 10px; }
-  .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-  .logo { display: flex; align-items: center; gap: 8px; }
-  .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, #0891b2, #10b981); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; }
-  .logo h1 { font-size: 14px; color: #fff; }
-  .logo p { font-size: 10px; color: var(--dim); }
-  .reset-btn { background: var(--panel2); color: var(--dim); border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: bold; }
-  
-  .tabs { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 4px; }
-  .tab-btn { background: transparent; color: var(--dim); border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; white-space: nowrap; }
-  .tab-btn.active { background: var(--cyan); color: #fff; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text);
+    min-height: 100vh; display: flex; flex-direction: column;
+    background-image: linear-gradient(rgba(6,182,212,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
 
-  /* الحاوية الرئيسية */
-  main { max-width: 1200px; margin: 16px auto; padding: 0 12px; }
-  .section { display: none; }
-  .section.active { display: block; animation: fadeIn 0.3s; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  header { position: sticky; top: 0; z-index: 100; background: rgba(5,8,16,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 12px; }
+  .header-top { text-align: center; margin-bottom: 12px; }
+  h1 { font-size: 1.2rem; color: var(--cyan); margin-bottom: 4px; }
+  p.subtitle { font-size: 0.75rem; color: var(--dim); }
+  
+  .main-tabs { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .main-tab-btn { background: var(--panel); color: var(--dim); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
+  .main-tab-btn.active { background: var(--cyan); color: #fff; border-color: var(--cyan); box-shadow: 0 0 10px rgba(6,182,212,0.3); }
+
+  main { flex: 1; }
+  .tab-content { display: none; max-width: 1200px; margin: 20px auto; padding: 0 12px; }
+  .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
   .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-  .card h2 { font-size: 16px; color: #fff; margin-bottom: 4px; }
-  .card p { font-size: 12px; color: var(--dim); }
+  .card h2 { font-size: 1rem; color: #fff; margin-bottom: 12px; }
 
-  /* محاكي الترانزستور */
-  .grid-layout { display: grid; grid-template-columns: 1fr; gap: 16px; }
-  @media(min-width: 768px) { .grid-layout { grid-template-columns: 2fr 1fr; } }
+  /* ============================================================
+     الصفحة الرئيسية الجديدة (Home)
+     ============================================================ */
+  .hero { text-align: center; padding: 30px 16px; background: radial-gradient(circle at center, rgba(6,182,212,0.1) 0%, transparent 70%); border-radius: 16px; margin-bottom: 24px; border: 1px solid var(--border); }
+  .hero h1 { font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, #06b6d4, #2eff9a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; }
+  .hero p { font-size: 1rem; color: var(--dim); max-width: 800px; margin: 0 auto; line-height: 1.8; }
   
-  .svg-container { background: #000; border: 1px solid var(--border); border-radius: 8px; padding: 10px; display: flex; justify-content: center; align-items: center; min-height: 300px; }
-  .svg-container svg { width: 100%; max-width: 400px; height: auto; }
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .info-card { background: var(--panel2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: relative; overflow: hidden; transition: 0.3s; }
+  .info-card:hover { transform: translateY(-5px); border-color: var(--cyan); box-shadow: 0 10px 20px rgba(6,182,212,0.15); }
+  .info-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--cyan); }
   
-  .slider-group { margin-bottom: 12px; }
-  .slider-group label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; }
-  .slider-group span { color: var(--cyan); font-family: monospace; font-weight: bold; }
-  input[type=range] { width: 100%; height: 6px; background: var(--border); border-radius: 4px; -webkit-appearance: none; outline: none; }
-  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: var(--cyan); border-radius: 50%; cursor: pointer; }
+  .info-card .icon-title { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: bold; color: #fff; margin-bottom: 12px; }
+  .info-card .icon-title span { font-size: 1.5rem; }
+  .info-card p { font-size: 0.85rem; color: var(--text); line-height: 1.7; margin-bottom: 10px; }
+  .info-card ul { padding-right: 20px; font-size: 0.85rem; color: var(--dim); line-height: 1.8; }
+  .info-card ul li { margin-bottom: 6px; }
+  .info-card ul li strong { color: var(--green-b); }
 
-  .telemetry { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
-  .telemetry-box { background: var(--panel2); padding: 10px; border-radius: 8px; text-align: center; }
-  .telemetry-box .title { font-size: 10px; color: var(--dim); }
-  .telemetry-box .value { font-size: 16px; font-family: monospace; font-weight: bold; margin-top: 4px; }
+  .fun-fact { background: rgba(168,85,247,0.1); border: 1px solid var(--purple); border-radius: 12px; padding: 20px; text-align: center; margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 15px; }
+  .fun-fact span { font-size: 2rem; }
+  .fun-fact div { text-align: right; }
+  .fun-fact h3 { color: var(--purple); font-size: 1rem; margin-bottom: 4px; }
+  .fun-fact p { font-size: 0.85rem; color: var(--text); }
 
-  /* شبكة البوابات */
-  .gates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 16px; }
+  /* ============================================================
+     تنسيقات باقي التبويبات
+     ============================================================ */
+  /* التبويب الأول (التجارب) */
+  .gates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
   .gate-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; }
-  .gate-header { text-align: center; font-size: 18px; font-weight: bold; color: var(--cyan); margin-bottom: 12px; font-family: monospace; }
-  
-  .inputs { display: flex; gap: 8px; justify-content: center; margin-bottom: 12px; }
-  .in-btn { flex: 1; padding: 8px; background: var(--panel2); border: 1px solid var(--border); color: var(--dim); border-radius: 6px; font-weight: bold; font-family: monospace; cursor: pointer; }
-  .in-btn.on { background: rgba(6,182,212,0.15); border-color: var(--cyan); color: var(--cyan); }
-
-  .led-box { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--panel2); padding: 10px; border-radius: 8px; margin-bottom: 12px; }
-  .led { width: 20px; height: 20px; border-radius: 50%; background: #3a1818; border: 1px solid #5a2424; }
-  .led.on { background: var(--green-b); border-color: var(--green); box-shadow: 0 0 15px var(--green-b); }
-  .led-text { font-family: monospace; font-size: 12px; font-weight: bold; color: var(--dim); }
+  .gate-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 12px; }
+  .gate-title { font-size: 1.2rem; font-weight: bold; color: var(--cyan); font-family: monospace; }
+  .gate-svg { width: 70px; height: 40px; }
+  .inputs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .in-btn { flex: 1; padding: 8px 6px; border-radius: 6px; border: 1px solid var(--border); background: var(--panel2); color: var(--dim); font-weight: bold; font-size: 0.75rem; cursor: pointer; text-align: center; min-width: 60px; }
+  .in-btn.on { background: rgba(6,182,212,0.15); border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 8px rgba(6,182,212,0.3); }
+  .led-box { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--panel2); padding: 10px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border); }
+  .led { width: 18px; height: 18px; border-radius: 50%; transition: all 0.2s; }
+  .led.on { background: var(--green-b); box-shadow: 0 0 15px var(--green-b), 0 0 30px var(--green); }
+  .led.off { background: #3a1818; border: 1px solid #5a2424; }
+  .led-text { font-family: monospace; font-size: 0.85rem; font-weight: bold; }
   .led-text.on { color: var(--green-b); }
+  .led-text.off { color: var(--dim); }
+  .scenario-box { background: #000; border: 1px dashed var(--border); border-radius: 8px; padding: 10px; margin-bottom: 12px; text-align: center; }
+  .scenario-title { font-size: 0.7rem; color: var(--dim); margin-bottom: 4px; }
+  .scenario-visual { font-size: 1.1rem; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .scenario-box.active { border-color: var(--green-b); background: rgba(46,255,154,0.05); }
+  .scenario-box.active .scenario-visual { color: var(--green-b); }
+  .scenario-box.inactive .scenario-visual { color: var(--red); opacity: 0.8; }
+  .usage-box { background: rgba(6,182,212,0.08); border-right: 3px solid var(--cyan); padding: 10px; border-radius: 6px; margin-top: auto; }
+  .usage-title { color: var(--cyan); font-size: 0.75rem; font-weight: bold; margin-bottom: 4px; }
+  .usage-desc { color: var(--text); font-size: 0.7rem; line-height: 1.5; opacity: 0.9; }
 
-  table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: monospace; margin-bottom: 12px; }
-  th, td { border: 1px solid var(--border); padding: 6px; text-align: center; }
+  /* الجداول */
+  table { width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.75rem; margin-bottom: 12px; text-align: center; }
+  th, td { padding: 5px; border: 1px solid var(--border); }
   th { background: var(--panel2); color: var(--dim); }
-  tr.active td { background: rgba(6,182,212,0.15); color: var(--cyan); font-weight: bold; }
-  tr.active td.out-1 { background: rgba(46,255,154,0.15); color: var(--green-b); }
+  tr.active td { background: rgba(6,182,212,0.2); color: var(--cyan); font-weight: bold; }
+  tr.active td.out-1 { background: rgba(46,255,154,0.2); color: var(--green-b); }
   tr.active td.out-0 { background: rgba(239,68,68,0.15); color: var(--red); }
 
-  /* صندوق الفائدة */
-  .usage-box { background: rgba(6,182,212,0.08); border-right: 3px solid var(--cyan); padding: 10px; border-radius: 6px; margin-top: auto; }
-  .usage-box strong { color: var(--cyan); font-size: 12px; display: block; margin-bottom: 4px; }
-  .usage-box p { font-size: 11px; color: var(--text); line-height: 1.5; margin: 0; }
+  /* التبويب الثاني (متعددة المدخلات) */
+  .multi-controls { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+  .select-box { background: var(--panel2); color: var(--text); border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; outline: none; }
+  .equation-box { background: rgba(168,85,247,0.1); border: 1px solid var(--purple); color: var(--purple); padding: 10px; border-radius: 8px; font-family: monospace; font-size: 1rem; text-align: center; margin-bottom: 16px; }
 
-  /* البوابات التفاعلية CMOS */
-  .igate-tabs { display: flex; gap: 4px; overflow-x: auto; margin-top: 10px; }
-  .igate-btn { background: var(--panel2); color: var(--dim); border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
-  .igate-btn.active { background: var(--cyan); color: #fff; }
-  
-  .igate-inputs { display: flex; justify-content: center; gap: 16px; margin: 20px 0; }
-  .igate-in { padding: 10px 30px; background: var(--panel2); border: 1px solid var(--border); color: var(--dim); font-size: 16px; font-family: monospace; border-radius: 8px; cursor: pointer; }
-  .igate-in.on { background: rgba(16,185,129,0.15); border-color: var(--green); color: var(--green-b); }
-  
-  .igate-output { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 20px; }
-  .igate-out { padding: 10px 30px; background: rgba(239,68,68,0.15); border: 1px solid var(--red); color: var(--red); font-size: 20px; font-family: monospace; border-radius: 8px; font-weight: bold; }
-  .igate-out.on { background: rgba(16,185,129,0.15); border-color: var(--green); color: var(--green-b); }
+  /* التبويب الثالث (الرسومات) */
+  .circuits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+  .circuit-card { background: var(--panel2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; }
+  .circuit-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+  .circuit-name { color: var(--amber); font-weight: bold; font-size: 0.9rem; }
+  .circuit-eq { font-family: monospace; font-size: 0.9rem; color: var(--green-b); background: #000; padding: 10px; border-radius: 6px; text-align: center; margin-bottom: 12px; white-space: pre-wrap; line-height: 1.4; direction: ltr; }
+  .circuit-desc { font-size: 0.75rem; color: var(--dim); margin-bottom: 12px; }
+  .circuit-svg-box { background: #000; border-radius: 8px; padding: 10px; display: flex; justify-content: center; align-items: center; min-height: 150px; border: 1px solid #222; }
+  .circuit-svg-box svg { width: 100%; max-height: 180px; }
+
+  /* التبويب الرابع (كارنوف) */
+  .kmap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+  .kmap-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .kmap-section-title { color: var(--cyan); font-size: 0.85rem; font-weight: bold; margin-bottom: 6px; border-right: 3px solid var(--cyan); padding-right: 6px; }
+  .kmap-wrapper { direction: ltr; display: flex; justify-content: center; margin: 10px 0; }
+  .kmap-table { border-collapse: collapse; font-family: monospace; font-size: 0.85rem; }
+  .kmap-table th, .kmap-table td { border: 1px solid var(--border); width: 38px; height: 38px; text-align: center; padding: 0; }
+  .kmap-table th { background: var(--panel2); color: var(--cyan); font-weight: bold; }
+  .kmap-table td.val-1 { color: var(--green-b); font-weight: bold; background: rgba(46,255,154,0.1); }
+  .kmap-table td.val-0 { color: var(--dim); }
+  .kmap-corner { position: relative; background: linear-gradient(to top right, transparent 48%, var(--border) 49%, var(--border) 51%, transparent 52%); }
+  .kmap-corner span { position: absolute; font-size: 0.7rem; color: var(--dim); }
+  .kmap-corner .top { top: 2px; right: 4px; }
+  .kmap-corner .bottom { bottom: 2px; left: 4px; }
+
+  /* توقيع المهندس */
+  .signature { text-align: center; padding: 30px 10px; margin-top: 40px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--dim); letter-spacing: 0.5px; }
+  .signature span { font-weight: bold; font-size: 1rem; background: linear-gradient(135deg, #06b6d4, #2eff9a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: 0 0 15px rgba(46,255,154,0.2); }
 </style>
 </head>
 <body>
 
 <header>
   <div class="header-top">
-    <div class="logo">
-      <div class="logo-icon">⚡</div>
-      <div><h1>مختبر البوابات المنطقية</h1><p>محاكي تفاعلي - يعمل بدون إنترنت</p></div>
-    </div>
-    <button class="reset-btn" onclick="resetAll()">إعادة ضبط</button>
+    <h1>⚡ مختبر البوابات المنطقية الشامل</h1>
+    <p class="subtitle">تعلم، جرب، واكتشف عالم الإلكترونيات الرقمية</p>
   </div>
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('gates')">البوابات السبع</button>
-    <button class="tab-btn" onclick="switchTab('transistor')">محاكي الترانزستور</button>
-    <button class="tab-btn" onclick="switchTab('cmos')">بوابات CMOS</button>
+  <div class="main-tabs">
+    <!-- إضافة التبويب الرئيسي الجديد -->
+    <button class="main-tab-btn active" onclick="switchTab('tab-home')">الصفحة الرئيسية</button>
+    <button class="main-tab-btn" onclick="switchTab('tab-basic')">التجارب الواقعية</button>
+    <button class="main-tab-btn" onclick="switchTab('tab-multi')">بوابات متعددة المدخلات</button>
+    <button class="main-tab-btn" onclick="switchTab('tab-circuits')">دائرة منطقية (رسومات)</button>
+    <button class="main-tab-btn" onclick="switchTab('tab-kmap')">خريطة كارنوف</button>
   </div>
 </header>
 
 <main>
-  <!-- قسم 1: البوابات السبع مع الفائدة -->
-  <section id="tab-gates" class="section active">
+  <!-- ==========================================
+       التبويب الرئيسي الجديد (الصفحة الرئيسية)
+       ========================================== -->
+  <section id="tab-home" class="tab-content active">
+    <div class="hero">
+      <h1>مرحباً بك في عالم التكنولوجيا الرقمية</h1>
+      <p>كل شاشة تلمسها، وكل لعبة تلعبها، وكل تطبيق تستخدمه، يعتمد في أعماقه على "البوابات المنطقية". هنا، لن نحفظ فقط، بل سنفهم كيف يفكر الكمبيوتر، وكيف نصنع دوائر ذكية بأيدينا.</p>
+    </div>
+
+    <div class="info-grid">
+      <!-- لماذا ندرس البوابات؟ -->
+      <div class="info-card">
+        <div class="icon-title"><span>🧠</span> لماذا ندرس البوابات المنطقية؟</div>
+        <p>لأنها <strong>اللغة الأم</strong> للآلات. البوابات هي الطوب الذي يُبنى منه كل شيء في الإلكترونيات، من ساعة رقمية بسيطة إلى معالج كمبيوتر خارق.</p>
+        <ul>
+          <li><strong>قلب المعالجات:</strong> معالج هاتفك يحتوي على مليارات الترانزستورات (البوابات) التي تتخذ قرارات في أجزاء من الثانية.</li>
+          <li><strong>تحويل الأفكار لواقع:</strong> تتيح لك تحويل المنطق البشري (مثل: إذا ضغطت الزر وكلمة المرور صحيحة، افتح الباب) إلى دائرة إلكترونية ملموسة.</li>
+        </ul>
+      </div>
+
+      <!-- كيف نفهمها بسهولة؟ -->
+      <div class="info-card">
+        <div class="icon-title"><span>💡</span> كيف نفهمها بأسهل طريقة؟</div>
+        <p>لا تنظر إليها كدوائر معقدة، بل كـ <strong>"مفاتيح قرار"</strong>. كل بوابة تنتظر إشارة (0 أو 1) وتتخذ قراراً بناءً على قاعدة بسيطة.</p>
+        <ul>
+          <li><strong>القاعدة الذهبية:</strong> تخيل أن 0 تعني "مطفأ / خطأ" و 1 تعني "مضاء / صحيح".</li>
+          <li><strong>جداول الحقيقة:</strong> هي ببساطة "ورقة إجابات" تخبرك ماذا ستفعل البوابة في كل حالة ممكنة.</li>
+          <li><strong>التجربة العملية:</strong> استخدم قسم "التجارب الواقعية" في هذا التطبيق لترى كيف يتحول المنطق إلى شيء حقيقي (مثل إنذار حريق أو صراف آلي).</li>
+        </ul>
+      </div>
+
+      <!-- ماذا سنستفيد؟ -->
+      <div class="info-card">
+        <div class="icon-title"><span>🚀</span> ماذا ستستفيد كمهندس أو طالب؟</div>
+        <p>دراسة هذا العلم ستغير طريقة تفكيرك وتفتح لك أبواباً في المستقبل:</p>
+        <ul>
+          <li><strong>التفكير المنطقي:</strong> ستصبح قادراً على تحليل المشكلات المعقدة وتقسيمها إلى أجزاء صغيرة قابلة للحل.</li>
+          <li><strong>أساس البرمجة:</strong> فهم البوابات (AND, OR, NOT) يجعلك تتفوق في البرمجة (هياكل التحكم If/Else) بشكل جنوني.</li>
+          <li><strong>تصميم الدوائر:</strong> ستتعلم كيف تصمم دوائر تتحكم في الروبوتات، المصانع، والأجهزة الذكية باستخدام أقل عدد من المكونات.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- هل تعلم؟ -->
+    <div class="fun-fact">
+      <span>🤯</span>
+      <div>
+        <h3>هل تعلم؟</h3>
+        <p>الهاتف الذكي الذي تحمله في جيبك يحتوي على أكثر من <strong>15 مليار ترانزستور</strong> (بوابة منطقية مصغرة جداً). لو أردت رسمها على ورقة، لاحتجت إلى مساحة بحجم ملعب كرة قدم! هذا هو سحر الإلكترونيات الرقمية.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       التبويبات القديمة
+       ========================================== -->
+  <section id="tab-basic" class="tab-content">
     <div class="gates-grid" id="gatesGrid"></div>
   </section>
 
-  <!-- قسم 2: محاكي الترانزستور -->
-  <section id="tab-transistor" class="section">
-    <div class="grid-layout">
-      <div>
-        <div class="card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <h2>مخطط الترانزستور (NPN)</h2>
-            <span id="t-region" style="color:var(--red); font-size:12px; font-weight:bold; border:1px solid var(--red); padding:4px 8px; border-radius:4px;">منطقة القطع</span>
-          </div>
-          <div class="svg-container">
-            <svg id="schematic" viewBox="0 0 400 300"></svg>
-          </div>
-          <div class="telemetry">
-            <div class="telemetry-box"><div class="title">تيار المجمع (I_C)</div><div class="value" id="t-ic" style="color:var(--cyan)">0.00 mA</div></div>
-            <div class="telemetry-box"><div class="title">جهد الخرج (V_CE)</div><div class="value" id="t-vce" style="color:var(--green-b)">5.00 V</div></div>
-          </div>
-        </div>
+  <section id="tab-multi" class="tab-content">
+    <div class="card">
+      <h2>مولد جداول الحقيقة والمعادلات</h2>
+      <div class="multi-controls">
+        <label>اختر البوابة:</label>
+        <select id="multiGate" class="select-box" onchange="initMulti()">
+          <option value="AND">AND</option>
+          <option value="OR">OR</option>
+          <option value="NAND">NAND</option>
+          <option value="NOR">NOR</option>
+          <option value="XOR">XOR</option>
+          <option value="XNOR">XNOR</option>
+        </select>
+        <label>عدد المدخلات:</label>
+        <select id="multiInputs" class="select-box" onchange="initMulti()">
+          <option value="2">2 مدخلات</option>
+          <option value="3">3 مدخلات</option>
+          <option value="4">4 مدخلات</option>
+        </select>
       </div>
-      <div>
-        <div class="card">
-          <h2>لوحة التحكم</h2>
-          <div class="slider-group" style="margin-top:16px;">
-            <label>تيار القاعدة (I_B) <span id="l-ib">0 μA</span></label>
-            <input type="range" id="s-ib" min="0" max="300" value="0" step="5" oninput="updateTransistor()">
-          </div>
-          <div class="slider-group">
-            <label>معامل التضخيم (β) <span id="l-beta">100</span></label>
-            <input type="range" id="s-beta" min="50" max="300" value="100" step="10" oninput="updateTransistor()">
-          </div>
-          <div class="slider-group">
-            <label>جهد التغذية (V_CC) <span id="l-vcc">5 V</span></label>
-            <input type="range" id="s-vcc" min="1" max="12" value="5" step="1" oninput="updateTransistor()">
-          </div>
-          <div class="usage-box" style="margin-top:20px;">
-            <strong>💡 كيف يعمل الترانزستور؟</strong>
-            <p>يعمل كمفتاح إلكتروني. عندما يتدفق تيار صغير في القاعدة (Base)، يسمح بمرور تيار أكبر بكثير بين المجمع (Collector) والمبث (Emitter). يُستخدم لتشغيل المحركات والمصابيح والتحكم في الدوائر.</p>
-          </div>
+      <div class="equation-box" id="multiEquation">Y = A · B</div>
+      <div style="display:flex; gap:16px; flex-wrap:wrap;">
+        <div style="flex:1; min-width:250px;">
+          <h3 style="color:var(--cyan); font-size:0.9rem; margin-bottom:10px;">أزرار المدخلات:</h3>
+          <div class="inputs" id="multiBtns"></div>
+          <div class="led-box"><div class="led off" id="multiLed"></div><span class="led-text off" id="multiLedText">الخرج Y = 0</span></div>
+        </div>
+        <div style="flex:1; min-width:250px;">
+          <h3 style="color:var(--cyan); font-size:0.9rem; margin-bottom:10px;">جدول الحقيقة:</h3>
+          <table id="multiTable"></table>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- قسم 3: بوابات CMOS -->
-  <section id="tab-cmos" class="section">
+  <section id="tab-circuits" class="tab-content">
     <div class="card">
-      <h2>محاكي البوابات بالترانزستور (CMOS)</h2>
-      <p>انقر على المدخلات لمراقبة الخرج.</p>
-      <div class="igate-tabs" id="cmosTabs"></div>
+      <h2>الدوائر المنطقية (من دفترك)</h2>
+      <p style="font-size:0.8rem; color:var(--dim); margin-bottom:16px;">تمت إعادة رسم المعادلات التي قمت بتصويرها باستخدام بوابات منطقية نظيفة ومطابقة تماماً لرسوماتك.</p>
+      <div class="circuits-grid" id="circuitsGrid"></div>
     </div>
-    <div class="card">
-      <h3 style="color:var(--cyan); text-align:center;" id="cmosTitle">NAND Gate</h3>
-      <div class="igate-inputs">
-        <button class="igate-in" id="cmos-a" onclick="toggleCmos('A')">A = 0</button>
-        <button class="igate-in" id="cmos-b" onclick="toggleCmos('B')">B = 0</button>
-      </div>
-      <div class="igate-output">
-        <span style="font-size:12px; color:var(--dim);">الخرج Y</span>
-        <div class="igate-out" id="cmos-y">Y = 0</div>
-      </div>
+  </section>
+
+  <section id="tab-kmap" class="tab-content">
+    <div class="card" style="margin-bottom:16px;">
+      <h2>تحويلات خريطة كارنوف (K-Map)</h2>
+      <p style="font-size:0.8rem; color:var(--dim);">يتم عرض جدول الحقيقة والمعادلة الأصلية، ثم خريطة كارنوف (من اليسار لليمين)، ثم المعادلة المبسطة النهائية.</p>
     </div>
+    <div class="kmap-grid" id="kmapGrid"></div>
   </section>
 </main>
 
+<!-- توقيع المهندس -->
+<footer class="signature">
+  تصميم وتطوير: <span>المهندس علاء بن فاروق</span>
+</footer>
+
 <script>
-// ================= 1. بيانات البوابات =================
+/* ============================================================
+   1. التبويب الأول: التجارب الواقعية
+   ============================================================ */
 const GATES = [
-  { id: 'AND', in: 2, fn: (a,b) => (a&&b)?1:0, use: 'تُستخدم في دوائر الأمان، حيث يجب أن يتحقق شرطان معاً (مثل البطاقة ورقم المرور) لفتح القفل.' },
-  { id: 'OR', in: 2, fn: (a,b) => (a||b)?1:0, use: 'تُستخدم في أنظمة الإنذار، يكفي أن يتحقق شرط واحد (دخان أو حرارة) لتفعيل الإنذار.' },
-  { id: 'NOT', in: 1, fn: (a) => a?0:1, use: 'تعكس الإشارة. تُستخدم في إضاءة مصباح تلقائياً عند غياب الضوء (ليلاً).' },
-  { id: 'NAND', in: 2, fn: (a,b) => (a&&b)?0:1, use: 'بوابة شاملة. تُستخدم بكثرة في تصنيع الذاكرة والمعالجات لأنها أسهل وأرخص في التصنيع.' },
-  { id: 'NOR', in: 2, fn: (a,b) => (a||b)?0:1, use: 'بوابة شاملة. تُستخدم في دوائر التحكم بالوقت وأنظمة الأمان المعقدة.' },
-  { id: 'XOR', in: 2, fn: (a,b) => a!==b?1:0, use: 'تُستخدم في دوائر الجمع الرياضي داخل المعالج (ALU)، وفي كشف الأخطاء أثناء نقل البيانات.' },
-  { id: 'XNOR', in: 2, fn: (a,b) => a===b?1:0, use: 'تُستخدم في دوائر المقارنة، للتحقق مما إذا كان الرقمان المدخلان متساويان.' }
+  { id: 'AND', in: 2, fn: (a,b) => (a&&b)?1:0, use: 'تُستخدم في الخزائن البنكية، حيث يجب أن يتحقق شرطان معاً لفتح القفل.', labels: ['بطاقة', 'رقم سري'], scenario: { name: 'نظام صرافة (ATM)', on: 'فتح الخزنة وصرف النقود', off: 'رفض العملية', iconOn: '💵', iconOff: '🔒' } },
+  { id: 'OR', in: 2, fn: (a,b) => (a||b)?1:0, use: 'تُستخدم في أنظمة إنذار الحريق، يكفي وجود دخان أو حرارة لتفعيل الإنذار.', labels: ['دخان', 'حرارة'], scenario: { name: 'إنذار الحريق', on: 'إنذار! إطلاق الماء', off: 'الوضع آمن', iconOn: '🔥', iconOff: '🛡️' } },
+  { id: 'NOT', in: 1, fn: (a) => a?0:1, use: 'تُستخدم في أجهزة الإضاءة الذكية، يضيء المصباح عند غياب ضوء الشمس.', labels: ['ضوء الشمس'], scenario: { name: 'إضاءة ليلية ذكية', on: 'المصباح يعمل', off: 'نهار، المصباح مطفأ', iconOn: '💡', iconOff: '🌙' } },
+  { id: 'NAND', in: 2, fn: (a,b) => (a&&b)?0:1, use: 'بوابة شاملة تُستخدم في لوحات التحكم الآمنة للآلات الثقيلة.', labels: ['زر اليمين', 'زر اليسار'], scenario: { name: 'آلة تشغيل آمنة', on: 'الآلة تعمل بأمان', off: 'توقف! (ضغط مزدوج)', iconOn: '⚙️', iconOff: '🛑' } },
+  { id: 'NOR', in: 2, fn: (a,b) => (a||b)?0:1, use: 'تُستخدم في دوائر الأمان لمنع الإطلاق إذا كان أي مفتاح أمان مفعلاً.', labels: ['مفتاح 1', 'مفتاح 2'], scenario: { name: 'نظام أمان الإطلاق', on: 'جاهز للإطلاق', off: 'إلغاء الإطلاق', iconOn: '🚀', iconOff: '⚠️' } },
+  { id: 'XOR', in: 2, fn: (a,b) => a!==b?1:0, use: 'تُستخدم في مفاتيح إضاءة السلالم (مفتاح بالأسفل ومفتاح بالأعلى).', labels: ['مفتاح أسفل', 'مفتاح أعلى'], scenario: { name: 'إضاءة السلالم', on: 'المصباح مضيء', off: 'المصباح مطفأ', iconOn: '💡', iconOff: '🌑' } },
+  { id: 'XNOR', in: 2, fn: (a,b) => a===b?1:0, use: 'تُستخدم في أنظمة التحقق من كلمات المرور، للتحقق من التطابق.', labels: ['كلمة 1', 'كلمة 2'], scenario: { name: 'التحقق من المرور', on: 'كلمتا المرور متطابقتان', off: 'خطأ في التطابق', iconOn: '🔓', iconOff: '🚫' } }
 ];
 
-let state = {};
+const SVGS = {
+  AND: `<path d="M 15 10 L 40 10 A 25 25 0 0 1 40 50 L 15 50 Z" fill="none" stroke="var(--cyan)" stroke-width="2.5" />`,
+  OR:  `<path d="M 15 10 Q 40 10 60 30 Q 40 50 15 50 Q 30 30 15 10 Z" fill="none" stroke="var(--cyan)" stroke-width="2.5" />`,
+  NOT: `<path d="M 20 10 L 60 30 L 20 50 Z" fill="none" stroke="var(--cyan)" stroke-width="2.5" /><circle cx="66" cy="30" r="5" fill="none" stroke="var(--cyan)" stroke-width="2.5" />`,
+  NAND:`<path d="M 15 10 L 40 10 A 25 25 0 0 1 40 50 L 15 50 Z" fill="none" stroke="var(--cyan)" stroke-width="2.5" /><circle cx="68" cy="30" r="5" fill="none" stroke="var(--cyan)" stroke-width="2.5" />`,
+  NOR: `<path d="M 15 10 Q 40 10 60 30 Q 40 50 15 50 Q 30 30 15 10 Z" fill="none" stroke="var(--cyan)" stroke-width="2.5" /><circle cx="68" cy="30" r="5" fill="none" stroke="var(--cyan)" stroke-width="2.5" />`,
+  XOR: `<path d="M 15 10 Q 40 10 60 30 Q 40 50 15 50 Q 30 30 15 10 Z" fill="none" stroke="var(--cyan)" stroke-width="2.5" /><path d="M 8 10 Q 23 30 8 50" fill="none" stroke="var(--cyan)" stroke-width="2.5" />`,
+  XNOR:`<path d="M 15 10 Q 40 10 60 30 Q 40 50 15 50 Q 30 30 15 10 Z" fill="none" stroke="var(--cyan)" stroke-width="2.5" /><circle cx="68" cy="30" r="5" fill="none" stroke="var(--cyan)" stroke-width="2.5" /><path d="M 8 10 Q 23 30 8 50" fill="none" stroke="var(--cyan)" stroke-width="2.5" />`
+};
+
+const state = {};
 GATES.forEach(g => state[g.id] = new Array(g.in).fill(0));
 
-// ================= 2. بناء شبكة البوابات =================
-function buildGates() {
+function buildBasic() {
   const grid = document.getElementById('gatesGrid');
   GATES.forEach(g => {
     const card = document.createElement('div');
     card.className = 'gate-card';
-    
     let inputsHtml = '';
-    for(let i=0; i<g.in; i++) {
-      inputsHtml += `<button class="in-btn" id="btn-${g.id}-${i}" onclick="toggleGate('${g.id}',${i})">${String.fromCharCode(65+i)} = 0</button>`;
-    }
-
+    for(let i=0; i<g.in; i++) inputsHtml += `<button class="in-btn" id="btn-${g.id}-${i}" onclick="toggle('${g.id}',${i})">${g.labels[i]}: 0</button>`;
     let tableHtml = `<table id="tbl-${g.id}"><tr><th>A</th>${g.in===2?'<th>B</th>':''}<th>Y</th></tr>`;
     const combos = g.in===1 ? [[0],[1]] : [[0,0],[0,1],[1,0],[1,1]];
     combos.forEach(c => {
@@ -216,181 +309,411 @@ function buildGates() {
       tableHtml += `<tr data-in="${c.join(',')}"><td>${c[0]}</td>${g.in===2?`<td>${c[1]}</td>`:''}<td class="${y?'out-1':'out-0'}">${y}</td></tr>`;
     });
     tableHtml += `</table>`;
-
     card.innerHTML = `
-      <div class="gate-header">${g.id}</div>
+      <div class="gate-header"><div class="gate-title">${g.id}</div><svg class="gate-svg" viewBox="0 0 80 60">${SVGS[g.id]}</svg></div>
       <div class="inputs">${inputsHtml}</div>
-      <div class="led-box">
-        <div class="led" id="led-${g.id}"></div>
-        <span class="led-text" id="txt-${g.id}">Y = 0</span>
-      </div>
+      <div class="led-box"><div class="led off" id="led-${g.id}"></div><span class="led-text off" id="txt-${g.id}">Y = 0</span></div>
       ${tableHtml}
-      <div class="usage-box">
-        <strong>💡 فائدة البوابة:</strong>
-        <p>${g.use}</p>
+      <div class="scenario-box inactive" id="sim-${g.id}">
+        <div class="scenario-title">${g.scenario.name}</div>
+        <div class="scenario-visual" id="simtxt-${g.id}"><span id="simicon-${g.id}">${g.scenario.iconOff}</span> <span id="simmsg-${g.id}">${g.scenario.off}</span></div>
       </div>
+      <div class="usage-box"><div class="usage-title">💡 الفائدة:</div><div class="usage-desc">${g.use}</div></div>
     `;
     grid.appendChild(card);
-    updateGate(g.id);
+    updateBasic(g.id);
   });
 }
 
-function toggleGate(id, idx) {
-  state[id][idx] = state[id][idx] ? 0 : 1;
-  updateGate(id);
-}
+function toggle(id, idx) { state[id][idx] = state[id][idx] ? 0 : 1; updateBasic(id); }
 
-function updateGate(id) {
-  const g = GATES.find(x => x.id === id);
-  const st = state[id];
-  const out = g.fn(...st);
-
+function updateBasic(id) {
+  const g = GATES.find(x => x.id === id), st = state[id], out = g.fn(...st);
   st.forEach((v, i) => {
     const b = document.getElementById(`btn-${id}-${i}`);
-    b.textContent = `${String.fromCharCode(65+i)} = ${v}`;
+    b.textContent = `${g.labels[i]}: ${v}`;
     b.className = 'in-btn ' + (v ? 'on' : '');
   });
-
-  const led = document.getElementById('led-'+id);
-  const txt = document.getElementById('txt-'+id);
-  led.className = 'led ' + (out ? 'on' : '');
-  txt.className = 'led-text ' + (out ? 'on' : '');
-  txt.textContent = `Y = ${out} (${out?'ON':'OFF'})`;
-
+  const led = document.getElementById('led-'+id), txt = document.getElementById('txt-'+id);
+  led.className = 'led ' + (out ? 'on' : 'off');
+  txt.className = 'led-text ' + (out ? 'on' : 'off');
+  txt.textContent = `Y = ${out}`;
   document.getElementById('tbl-'+id).querySelectorAll('tr').forEach(tr => {
     if(!tr.dataset.in) return;
     const ins = tr.dataset.in.split(',').map(Number);
     tr.className = ins.every((v, i) => v === st[i]) ? 'active' : '';
   });
-}
-
-// ================= 3. الترانزستور =================
-function drawTransistor() {
-  document.getElementById('schematic').innerHTML = `
-    <line x1="50" y1="40" x2="350" y2="40" stroke="#475569" stroke-width="2"/>
-    <text x="40" y="35" fill="#94a3b8" font-size="12">V_CC</text>
-    
-    <line x1="200" y1="40" x2="200" y2="80" stroke="#06b6d4" stroke-width="2"/>
-    <rect x="170" y="120" width="60" height="60" fill="none" stroke="#06b6d4" stroke-width="2" rx="4"/>
-    <line x1="200" y1="100" x2="200" y2="120" stroke="#06b6d4" stroke-width="2"/>
-    <line x1="200" y1="180" x2="200" y2="210" stroke="#06b6d4" stroke-width="2"/>
-    
-    <line x1="200" y1="80" x2="200" y2="100" stroke="#f59e0b" stroke-width="2"/>
-    <rect x="170" y="80" width="60" height="20" fill="none" stroke="#f59e0b" stroke-width="2" rx="4"/>
-    <text x="200" y="94" fill="#f59e0b" font-size="10" text-anchor="middle" font-family="monospace">R_C</text>
-
-    <line x1="100" y1="150" x2="170" y2="150" stroke="#22d3ee" stroke-width="2"/>
-    <text x="60" y="155" fill="#22d3ee" font-size="12">V_in (Base)</text>
-    
-    <line x1="200" y1="210" x2="200" y2="250" stroke="#475569" stroke-width="2"/>
-    <line x1="50" y1="250" x2="350" y2="250" stroke="#475569" stroke-width="2"/>
-    <text x="320" y="270" fill="#94a3b8" font-size="12">GND (Emitter)</text>
-    
-    <circle cx="200" cy="150" r="30" fill="none" stroke="#475569" stroke-width="1" stroke-dasharray="4"/>
-    <text x="200" y="155" fill="#06b6d4" font-size="14" text-anchor="middle" font-weight="bold">NPN</text>
-  `;
-}
-
-function updateTransistor() {
-  const ib = parseFloat(document.getElementById('s-ib').value);
-  const beta = parseFloat(document.getElementById('s-beta').value);
-  const vcc = parseFloat(document.getElementById('s-vcc').value);
-  const rc = 220; // مقاومة ثابتة للمحاكاة
-
-  document.getElementById('l-ib').textContent = ib + ' μA';
-  document.getElementById('l-beta').textContent = beta;
-  document.getElementById('l-vcc').textContent = vcc + ' V';
-
-  let ic = (ib * 1e-6) * beta * 1000; // بالمللي أمبير
-  let vce = vcc - (ic / 1000) * rc;
-
-  if (vce < 0.2) { // منطقة التشبع
-    vce = 0.2;
-    ic = ((vcc - 0.2) / rc) * 1000;
+  const simBox = document.getElementById('sim-'+id), simIcon = document.getElementById('simicon-'+id), simMsg = document.getElementById('simmsg-'+id);
+  if (out) {
+    simBox.className = 'scenario-box active'; simIcon.textContent = g.scenario.iconOn; simMsg.textContent = g.scenario.on;
+  } else {
+    simBox.className = 'scenario-box inactive'; simIcon.textContent = g.scenario.iconOff; simMsg.textContent = g.scenario.off;
   }
-
-  const on = ic > 1;
-  document.getElementById('t-ic').textContent = ic.toFixed(2) + ' mA';
-  document.getElementById('t-vce').textContent = vce.toFixed(2) + ' V';
-  document.getElementById('t-ic').style.color = on ? 'var(--green-b)' : 'var(--cyan)';
-  document.getElementById('t-vce').style.color = on ? 'var(--red)' : 'var(--green-b)';
-
-  const reg = document.getElementById('t-region');
-  if (ic < 0.1) { reg.textContent = 'منطقة القطع'; reg.style.color = 'var(--red)'; reg.style.borderColor = 'var(--red)'; }
-  else if (vce <= 0.2) { reg.textContent = 'منطقة التشبع'; reg.style.color = 'var(--green-b)'; reg.style.borderColor = 'var(--green-b)'; }
-  else { reg.textContent = 'منطقة نشطة (تضخيم)'; reg.style.color = 'var(--cyan)'; reg.style.borderColor = 'var(--cyan)'; }
 }
 
-// ================= 4. بوابات CMOS =================
-const CMOS_GATES = ['NOT', 'AND', 'NAND', 'OR', 'NOR', 'XOR', 'XNOR'];
-let cmosState = { gate: 'NAND', a: 0, b: 0 };
-const cmosFns = {
-  NOT: (a,b) => a ? 0 : 1, AND: (a,b) => (a&&b)?1:0, NAND: (a,b) => (a&&b)?0:1,
-  OR: (a,b) => (a||b)?1:0, NOR: (a,b) => (a||b)?0:1, XOR: (a,b) => a!==b?1:0, XNOR: (a,b) => a===b?1:0
-};
+/* ============================================================
+   2. التبويب الثاني: بوابات متعددة المدخلات
+   ============================================================ */
+let multiState = [], multiInputsCount = 2;
 
-function buildCmos() {
-  const tabs = document.getElementById('cmosTabs');
-  CMOS_GATES.forEach(g => {
-    const btn = document.createElement('button');
-    btn.className = 'igate-btn' + (g === cmosState.gate ? ' active' : '');
-    btn.textContent = g;
-    btn.onclick = () => { cmosState.gate = g; updateCmos(); };
-    tabs.appendChild(btn);
+function initMulti() {
+  const gate = document.getElementById('multiGate').value;
+  multiInputsCount = parseInt(document.getElementById('multiInputs').value);
+  multiState = new Array(multiInputsCount).fill(0);
+  const btnsDiv = document.getElementById('multiBtns'); btnsDiv.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  for(let i=0; i<multiInputsCount; i++) {
+    const btn = document.createElement('button'); btn.className = 'in-btn'; btn.id = `mbtn-${i}`;
+    btn.onclick = () => { multiState[i] = multiState[i] ? 0 : 1; updateMulti(); };
+    btnsDiv.appendChild(btn);
+  }
+  let eq = 'Y = ';
+  if (gate === 'AND' || gate === 'NAND') eq += letters.slice(0, multiInputsCount).join(' · ');
+  else if (gate === 'OR' || gate === 'NOR') eq += letters.slice(0, multiInputsCount).join(' + ');
+  else eq += letters.slice(0, multiInputsCount).join(' ⊕ ');
+  if (gate === 'NAND' || gate === 'NOR' || gate === 'XNOR') eq = "Y = (" + eq.substring(4) + ")'";
+  document.getElementById('multiEquation').textContent = eq;
+  let tableHtml = '<tr><th>' + letters.slice(0, multiInputsCount).join('</th><th>') + '</th><th>Y</th></tr>';
+  const rows = Math.pow(2, multiInputsCount);
+  for(let i=0; i<rows; i++) {
+    const bits = []; for(let j=multiInputsCount-1; j>=0; j--) bits.push((i >> j) & 1);
+    let y = calcMulti(gate, bits);
+    tableHtml += `<tr data-in="${bits.join(',')}">`;
+    bits.forEach(b => tableHtml += `<td>${b}</td>`);
+    tableHtml += `<td class="${y?'out-1':'out-0'}">${y}</td></tr>`;
+  }
+  document.getElementById('multiTable').innerHTML = tableHtml;
+  updateMulti();
+}
+
+function calcMulti(gate, inputs) {
+  const ones = inputs.filter(x => x === 1).length, n = inputs.length;
+  if (gate === 'AND') return ones === n ? 1 : 0;
+  if (gate === 'OR') return ones > 0 ? 1 : 0;
+  if (gate === 'NAND') return ones === n ? 0 : 1;
+  if (gate === 'NOR') return ones > 0 ? 0 : 1;
+  if (gate === 'XOR') return ones % 2 === 1 ? 1 : 0;
+  if (gate === 'XNOR') return ones % 2 === 0 ? 1 : 0;
+}
+
+function updateMulti() {
+  const gate = document.getElementById('multiGate').value, letters = ['A', 'B', 'C', 'D'];
+  multiState.forEach((v, i) => {
+    const btn = document.getElementById(`mbtn-${i}`);
+    btn.textContent = `${letters[i]} = ${v}`;
+    btn.className = 'in-btn ' + (v ? 'on' : '');
   });
-  updateCmos();
-}
-
-function toggleCmos(input) {
-  if (input === 'A') cmosState.a = cmosState.a ? 0 : 1;
-  if (input === 'B') cmosState.b = cmosState.b ? 0 : 1;
-  updateCmos();
-}
-
-function updateCmos() {
-  document.querySelectorAll('#cmosTabs .igate-btn').forEach((b, i) => {
-    b.className = 'igate-btn' + (CMOS_GATES[i] === cmosState.gate ? ' active' : '');
+  const out = calcMulti(gate, multiState);
+  const led = document.getElementById('multiLed'), txt = document.getElementById('multiLedText');
+  led.className = 'led ' + (out ? 'on' : 'off'); txt.className = 'led-text ' + (out ? 'on' : 'off');
+  txt.textContent = `الخرج Y = ${out}`;
+  document.getElementById('multiTable').querySelectorAll('tr').forEach(tr => {
+    if(!tr.dataset.in) return;
+    const ins = tr.dataset.in.split(',').map(Number);
+    tr.className = ins.every((v, i) => v === multiState[i]) ? 'active' : '';
   });
-  
-  document.getElementById('cmosTitle').textContent = cmosState.gate + ' Gate';
-  
-  const btnA = document.getElementById('cmos-a');
-  const btnB = document.getElementById('cmos-b');
-  btnA.textContent = 'A = ' + cmosState.a;
-  btnB.textContent = 'B = ' + cmosState.b;
-  btnA.className = 'igate-in ' + (cmosState.a ? 'on' : '');
-  btnB.className = 'igate-in ' + (cmosState.b ? 'on' : '');
-  btnB.style.display = cmosState.gate === 'NOT' ? 'none' : 'block';
-
-  const out = cmosFns[cmosState.gate](cmosState.a, cmosState.b);
-  const yDiv = document.getElementById('cmos-y');
-  yDiv.textContent = 'Y = ' + out;
-  yDiv.className = 'igate-out ' + (out ? 'on' : '');
 }
 
-// ================= 5. التبويبات والإعداد =================
-function switchTab(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + id).classList.add('active');
+/* ============================================================
+   3. التبويب الثالث: الدوائر المنطقية
+   ============================================================ */
+const CIRCUITS = [
+  {
+    name: 'المعادلة الأولى',
+    eq: 'Y = AB + (AB)\'',
+    desc: 'ناتج بوابة AND مع ناتج بوابة NAND، يجمعان ببوابة OR.',
+    svg: `<svg viewBox="0 0 300 160">
+      <text x="10" y="45" fill="#94a3b8" font-size="14">A</text>
+      <line x1="25" y1="40" x2="60" y2="40" stroke="#94a3b8" stroke-width="2"/>
+      <text x="10" y="135" fill="#94a3b8" font-size="14">B</text>
+      <line x1="25" y1="130" x2="60" y2="130" stroke="#94a3b8" stroke-width="2"/>
+      <circle cx="60" cy="40" r="3" fill="#94a3b8"/><circle cx="60" cy="130" r="3" fill="#94a3b8"/>
+      <line x1="60" y1="40" x2="90" y2="40" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="60" y1="130" x2="75" y2="130" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="75" y1="130" x2="75" y2="60" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="75" y1="60" x2="90" y2="60" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="60" y1="40" x2="60" y2="100" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="60" y1="100" x2="90" y2="100" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="60" y1="130" x2="90" y2="130" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M 90 30 L 110 30 A 20 20 0 0 1 110 70 L 90 70 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="90" y1="40" x2="110" y2="40" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="90" y1="60" x2="110" y2="60" stroke="#06b6d4" stroke-width="2"/>
+      <path d="M 90 90 L 110 90 A 20 20 0 0 1 110 130 L 90 130 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <circle cx="133" cy="110" r="4" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="90" y1="100" x2="110" y2="100" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="90" y1="120" x2="110" y2="120" stroke="#06b6d4" stroke-width="2"/>
+      <path d="M 180 60 Q 210 60 230 90 Q 210 120 180 120 Q 195 90 180 60 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="130" y1="50" x2="180" y2="50" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="180" y1="50" x2="180" y2="70" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="137" y1="110" x2="180" y2="110" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="230" y1="90" x2="260" y2="90" stroke="#06b6d4" stroke-width="2"/>
+      <text x="265" y="95" fill="#94a3b8" font-size="14">Y</text>
+    </svg>`
+  },
+  {
+    name: 'المعادلة الثانية',
+    eq: 'Y = A\' · B',
+    desc: 'عكس المدخل A ثم ضربه مع B.',
+    svg: `<svg viewBox="0 0 250 120">
+      <text x="10" y="45" fill="#94a3b8" font-size="14">A</text>
+      <line x1="25" y1="40" x2="50" y2="40" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M 50 25 L 75 40 L 50 55 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <circle cx="79" cy="40" r="4" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <text x="10" y="95" fill="#94a3b8" font-size="14">B</text>
+      <line x1="25" y1="90" x2="110" y2="90" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="83" y1="40" x2="110" y2="40" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M 110 30 L 130 30 A 20 20 0 0 1 130 70 L 110 70 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="110" y1="40" x2="130" y2="40" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="110" y1="60" x2="130" y2="60" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="150" y1="50" x2="200" y2="50" stroke="#06b6d4" stroke-width="2"/>
+      <text x="205" y="55" fill="#94a3b8" font-size="14">Y</text>
+    </svg>`
+  },
+  {
+    name: 'المعادلة الثالثة',
+    eq: 'Y = A · B\'',
+    desc: 'عكس المدخل B ثم ضربه مع A.',
+    svg: `<svg viewBox="0 0 250 120">
+      <text x="10" y="45" fill="#94a3b8" font-size="14">A</text>
+      <line x1="25" y1="40" x2="110" y2="40" stroke="#94a3b8" stroke-width="2"/>
+      <text x="10" y="95" fill="#94a3b8" font-size="14">B</text>
+      <line x1="25" y1="90" x2="50" y2="90" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M 50 75 L 75 90 L 50 105 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <circle cx="79" cy="90" r="4" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="83" y1="90" x2="110" y2="90" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M 110 30 L 130 30 A 20 20 0 0 1 130 70 L 110 70 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="110" y1="40" x2="130" y2="40" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="110" y1="60" x2="130" y2="60" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="150" y1="50" x2="200" y2="50" stroke="#06b6d4" stroke-width="2"/>
+      <text x="205" y="55" fill="#94a3b8" font-size="14">Y</text>
+    </svg>`
+  },
+  {
+    name: 'المعادلة الرابعة',
+    eq: 'Y = (A · B)\'',
+    desc: 'بوابة NAND فقط.',
+    svg: `<svg viewBox="0 0 250 120">
+      <text x="10" y="45" fill="#94a3b8" font-size="14">A</text>
+      <line x1="25" y1="40" x2="80" y2="40" stroke="#94a3b8" stroke-width="2"/>
+      <text x="10" y="95" fill="#94a3b8" font-size="14">B</text>
+      <line x1="25" y1="90" x2="80" y2="90" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M 80 30 L 100 30 A 20 20 0 0 1 100 70 L 80 70 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <circle cx="123" cy="50" r="4" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="80" y1="40" x2="100" y2="40" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="80" y1="60" x2="100" y2="60" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="127" y1="50" x2="200" y2="50" stroke="#06b6d4" stroke-width="2"/>
+      <text x="205" y="55" fill="#94a3b8" font-size="14">Y</text>
+    </svg>`
+  },
+  {
+    name: 'المعادلة الخامسة',
+    eq: 'Y = (A\' · B\')\'',
+    desc: 'عكس A و B ثم إدخالهما لبوابة NAND.',
+    svg: `<svg viewBox="0 0 250 160">
+      <text x="10" y="45" fill="#94a3b8" font-size="14">A</text>
+      <line x1="25" y1="40" x2="50" y2="40" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M 50 25 L 75 40 L 50 55 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <circle cx="79" cy="40" r="4" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="83" y1="40" x2="130" y2="40" stroke="#94a3b8" stroke-width="2"/>
+      <text x="10" y="135" fill="#94a3b8" font-size="14">B</text>
+      <line x1="25" y1="130" x2="50" y2="130" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M 50 115 L 75 130 L 50 145 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <circle cx="79" cy="130" r="4" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="83" y1="130" x2="130" y2="130" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M 130 60 L 150 60 A 20 20 0 0 1 150 100 L 130 100 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <circle cx="173" cy="80" r="4" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="130" y1="70" x2="150" y2="70" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="130" y1="90" x2="150" y2="90" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="130" y1="40" x2="140" y2="40" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="140" y1="40" x2="140" y2="70" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="140" y1="130" x2="140" y2="90" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="177" y1="80" x2="220" y2="80" stroke="#06b6d4" stroke-width="2"/>
+      <text x="225" y="85" fill="#94a3b8" font-size="14">Y</text>
+    </svg>`
+  },
+  {
+    name: 'المعادلة السادسة',
+    eq: 'Y = (A + B)\'',
+    desc: 'بوابة NOR فقط.',
+    svg: `<svg viewBox="0 0 250 120">
+      <text x="10" y="45" fill="#94a3b8" font-size="14">A</text>
+      <line x1="25" y1="40" x2="80" y2="40" stroke="#94a3b8" stroke-width="2"/>
+      <text x="10" y="95" fill="#94a3b8" font-size="14">B</text>
+      <line x1="25" y1="90" x2="80" y2="90" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M 80 30 Q 110 30 125 60 Q 110 90 80 90 Q 95 60 80 30 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <circle cx="130" cy="60" r="4" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="80" y1="40" x2="100" y2="40" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="80" y1="80" x2="100" y2="80" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="134" y1="60" x2="200" y2="60" stroke="#06b6d4" stroke-width="2"/>
+      <text x="205" y="65" fill="#94a3b8" font-size="14">Y</text>
+    </svg>`
+  },
+  {
+    name: 'المعادلة السابعة',
+    eq: 'Y = A(B)\' + (A)\'B',
+    desc: 'بوابة XOR (مبنية من بوابتي AND وبوابة OR).',
+    svg: `<svg viewBox="0 0 300 160">
+      <text x="10" y="45" fill="#94a3b8" font-size="14">A</text>
+      <line x1="25" y1="40" x2="60" y2="40" stroke="#94a3b8" stroke-width="2"/>
+      <text x="10" y="135" fill="#94a3b8" font-size="14">B</text>
+      <line x1="25" y1="130" x2="60" y2="130" stroke="#94a3b8" stroke-width="2"/>
+      <circle cx="60" cy="40" r="3" fill="#94a3b8"/><circle cx="60" cy="130" r="3" fill="#94a3b8"/>
+      <line x1="60" y1="40" x2="70" y2="40" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M 70 25 L 95 40 L 70 55 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <circle cx="99" cy="40" r="4" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="60" y1="130" x2="70" y2="130" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="70" y1="130" x2="70" y2="60" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="70" y1="60" x2="120" y2="60" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="103" y1="40" x2="120" y2="40" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M 120 30 L 140 30 A 20 20 0 0 1 140 70 L 120 70 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="60" y1="40" x2="60" y2="100" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="60" y1="100" x2="120" y2="100" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="60" y1="130" x2="80" y2="130" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="80" y1="130" x2="80" y2="115" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M 80 100 L 105 115 L 80 130 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <circle cx="109" cy="115" r="4" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="113" y1="115" x2="120" y2="115" stroke="#94a3b8" stroke-width="2"/>
+      <path d="M 120 90 L 140 90 A 20 20 0 0 1 140 130 L 120 130 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <path d="M 190 60 Q 220 60 240 90 Q 220 120 190 120 Q 205 90 190 60 Z" fill="none" stroke="#06b6d4" stroke-width="2"/>
+      <line x1="160" y1="50" x2="190" y2="50" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="190" y1="50" x2="190" y2="70" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="160" y1="110" x2="190" y2="110" stroke="#94a3b8" stroke-width="2"/>
+      <line x1="240" y1="90" x2="280" y2="90" stroke="#06b6d4" stroke-width="2"/>
+      <text x="285" y="95" fill="#94a3b8" font-size="14">Y</text>
+    </svg>`
+  }
+];
+
+function buildCircuits() {
+  const grid = document.getElementById('circuitsGrid');
+  CIRCUITS.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'circuit-card';
+    card.innerHTML = `
+      <div class="circuit-header"><div class="circuit-name">${c.name}</div></div>
+      <div class="circuit-desc">${c.desc}</div>
+      <div class="circuit-eq">${c.eq}</div>
+      <div class="circuit-svg-box">${c.svg}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+/* ============================================================
+   4. التبويب الرابع: خريطة كارنوف
+   ============================================================ */
+const KMAP_EXAMPLES = [
+  { title: 'مثال 1 (2 متغيرات)', n: 2, minterms: [1,3], originalEq: 'F = A\'B + AB', simplifiedEq: 'F = B' },
+  { title: 'مثال 2 (2 متغيرات)', n: 2, minterms: [2,3], originalEq: 'F = AB\' + AB', simplifiedEq: 'F = A' },
+  { title: 'مثال 3 (3 متغيرات)', n: 3, minterms: [1,3,5,7], originalEq: 'F = A\'B\'C + A\'BC + AB\'C + ABC', simplifiedEq: 'F = C' },
+  { title: 'مثال 4 (3 متغيرات)', n: 3, minterms: [0,2,4,6], originalEq: 'F = A\'B\'C\' + A\'BC\' + AB\'C\' + ABC\'', simplifiedEq: 'F = C\'' },
+  { title: 'مثال 5 (3 متغيرات)', n: 3, minterms: [3,7], originalEq: 'F = A\'BC + ABC', simplifiedEq: 'F = BC' },
+  { title: 'مثال 6 (4 متغيرات)', n: 4, minterms: [0,1,2,3,8,9,10,11], originalEq: 'F = A\'B\'C\'D\' + ... + AB\'CD', simplifiedEq: 'F = B\'' },
+  { title: 'مثال 7 (4 متغيرات)', n: 4, minterms: [5,7,13,15], originalEq: 'F = A\'BC\'D + A\'BCD + ABC\'D + ABCD', simplifiedEq: 'F = BD' },
+  { title: 'مثال 8 (4 متغيرات)', n: 4, minterms: [0,2,8,10], originalEq: 'F = A\'B\'C\'D\' + A\'B\'CD\' + AB\'C\'D\' + AB\'CD\'', simplifiedEq: 'F = B\'D\'' },
+  { title: 'مثال 9 (4 متغيرات)', n: 4, minterms: [0,1,4,5,8,9,12,13], originalEq: 'F = A\'B\'C\'D\' + ... + ABC\'D', simplifiedEq: 'F = C\'' },
+  { title: 'مثال 10 (4 متغيرات)', n: 4, minterms: [1,3,5,7,9,11,13,15], originalEq: 'F = A\'B\'C\'D + ... + ABCD', simplifiedEq: 'F = D' }
+];
+
+function getTruthTableHTML(n, minterms) {
+  let html = '<table style="font-size:0.7rem; width:100%;"><tr><th>' + (n===2?'AB':n===3?'ABC':'ABCD') + '</th><th>F</th></tr>';
+  const rows = Math.pow(2, n);
+  for(let i=0; i<rows; i++) {
+    let bits = '';
+    for(let j=n-1; j>=0; j--) bits += ((i >> j) & 1);
+    const val = minterms.includes(i) ? 1 : 0;
+    html += `<tr><td>${bits}</td><td class="${val?'out-1':'out-0'}" style="padding:2px;">${val}</td></tr>`;
+  }
+  html += '</table>';
+  return html;
+}
+
+function getKMapHTML(n, minterms) {
+  let tableHtml = '<div class="kmap-wrapper"><table class="kmap-table">';
+  
+  if (n === 2) {
+    tableHtml += '<tr><th class="kmap-corner"><span class="top">A</span><span class="bottom">B</span></th><th>0</th><th>1</th></tr>';
+    for (let B=0; B<2; B++) {
+      tableHtml += `<tr><th>${B}</th>`;
+      for (let A=0; A<2; A++) {
+        const m = (A << 1) | B;
+        tableHtml += `<td class="val-${minterms.includes(m)?1:0}">${minterms.includes(m)?1:0}</td>`;
+      }
+      tableHtml += '</tr>';
+    }
+  } else if (n === 3) {
+    const colAB = ['00', '01', '11', '10'];
+    tableHtml += '<tr><th class="kmap-corner"><span class="top">AB</span><span class="bottom">C</span></th>' + colAB.map(c => `<th>${c}</th>`).join('') + '</tr>';
+    for (let C=0; C<2; C++) {
+      tableHtml += `<tr><th>${C}</th>`;
+      for (let j=0; j<4; j++) {
+        let A = (j === 2 || j === 3) ? 1 : 0; 
+        let B = (j === 1 || j === 2) ? 1 : 0; 
+        const m = (A << 2) | (B << 1) | C;
+        tableHtml += `<td class="val-${minterms.includes(m)?1:0}">${minterms.includes(m)?1:0}</td>`;
+      }
+      tableHtml += '</tr>';
+    }
+  } else if (n === 4) {
+    const colAB = ['00', '01', '11', '10'];
+    const rowCD = ['00', '01', '11', '10'];
+    tableHtml += '<tr><th class="kmap-corner"><span class="top">AB</span><span class="bottom">CD</span></th>' + colAB.map(c => `<th>${c}</th>`).join('') + '</tr>';
+    for (let i=0; i<4; i++) {
+      tableHtml += `<tr><th>${rowCD[i]}</th>`;
+      for (let j=0; j<4; j++) {
+        let A = (j === 2 || j === 3) ? 1 : 0;
+        let B = (j === 1 || j === 2) ? 1 : 0;
+        let C = (i === 2 || i === 3) ? 1 : 0;
+        let D = (i === 1 || i === 2) ? 1 : 0;
+        const m = (A << 3) | (B << 2) | (C << 1) | D;
+        tableHtml += `<td class="val-${minterms.includes(m)?1:0}">${minterms.includes(m)?1:0}</td>`;
+      }
+      tableHtml += '</tr>';
+    }
+  }
+  tableHtml += '</table></div>';
+  return tableHtml;
+}
+
+function buildKMaps() {
+  const grid = document.getElementById('kmapGrid');
+  KMAP_EXAMPLES.forEach(ex => {
+    const card = document.createElement('div');
+    card.className = 'kmap-card';
+    card.innerHTML = `
+      <div class="circuit-name" style="text-align:center;">${ex.title}</div>
+      <div>
+        <div class="kmap-section-title">1. جدول الحقيقة:</div>
+        ${getTruthTableHTML(ex.n, ex.minterms)}
+        <div style="font-size:0.7rem; color:var(--dim); text-align:center; margin-top:4px;">المعادلة الأصلية: ${ex.originalEq}</div>
+      </div>
+      <div>
+        <div class="kmap-section-title">2. خريطة كارنوف (LTR):</div>
+        ${getKMapHTML(ex.n, ex.minterms)}
+      </div>
+      <div>
+        <div class="kmap-section-title">3. المعادلة المبسطة:</div>
+        <div class="equation-box" style="margin-bottom:0; font-size:0.9rem; color:var(--green-b); border-color:var(--green-b);">${ex.simplifiedEq}</div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+/* ============================================================
+   التهيئة والتبويبات
+   ============================================================ */
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.main-tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
   event.target.classList.add('active');
 }
 
-function resetAll() {
-  GATES.forEach(g => { state[g.id].fill(0); updateGate(g.id); });
-  document.getElementById('s-ib').value = 0;
-  document.getElementById('s-beta').value = 100;
-  document.getElementById('s-vcc').value = 5;
-  updateTransistor();
-  cmosState = { gate: 'NAND', a: 0, b: 0 };
-  updateCmos();
-}
-
-// التشغيل
-buildGates();
-drawTransistor();
-updateTransistor();
-buildCmos();
+buildBasic();
+initMulti();
+buildCircuits();
+buildKMaps();
 </script>
 </body>
 </html>
